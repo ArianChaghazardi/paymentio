@@ -25,11 +25,22 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->enabled     = $this->get_option( 'enabled', 'no' );
+        $mode              = get_option( 'paymentio_display_mode', 'separate' );
+        $this->enabled     = ( 'unified' === $mode ) ? $this->get_option( 'enabled', 'yes' ) : 'no';
         $this->title       = $this->get_option( 'title', 'پرداخت اینترنتی امن' );
         $this->description = $this->get_option( 'description', 'پرداخت با کلیه کارت های عضو شبکه شتاب به وسیله درگاه امن بانکی' );
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+    }
+
+    /**
+     * Save admin options and sync paymentio_display_mode
+     */
+    public function process_admin_options() {
+        $result  = parent::process_admin_options();
+        $enabled = $this->get_option( 'enabled', 'no' );
+        update_option( 'paymentio_display_mode', ( 'yes' === $enabled ) ? 'unified' : 'separate' );
+        return $result;
     }
 
     /**

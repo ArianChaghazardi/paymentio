@@ -77,6 +77,9 @@ class Paymentio {
         // Enqueue checkout styles
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
 
+        // Filter available gateways in checkout based on display mode
+        add_filter( 'woocommerce_available_payment_gateways', array( $this, 'filter_available_gateways' ) );
+
         // Add action links to plugin list
         add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
     }
@@ -157,5 +160,31 @@ class Paymentio {
         }
 
         return $active;
+    }
+
+    /**
+     * Filter available gateways based on Paymentio display mode
+     *
+     * @param array $gateways
+     * @return array
+     */
+    public function filter_available_gateways( $gateways ) {
+        if ( is_admin() ) {
+            return $gateways;
+        }
+
+        $mode = get_option( 'paymentio_display_mode', 'separate' );
+
+        if ( 'unified' === $mode ) {
+            // In unified mode, hide individual gateways so only unified is shown
+            unset( $gateways['paymentio_zarinpal'] );
+            unset( $gateways['paymentio_zibal'] );
+            unset( $gateways['paymentio_payping'] );
+        } else {
+            // In separate mode, hide unified gateway so only enabled individual gateways are shown
+            unset( $gateways['paymentio_unified'] );
+        }
+
+        return $gateways;
     }
 }
