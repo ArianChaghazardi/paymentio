@@ -13,7 +13,10 @@ jQuery(document).ready(function ($) {
         $(this).closest('.paymentio-badge-card').addClass('active');
     });
 
-    $(document).on('click', '.paymentio-badge-card', function () {
+    $(document).on('click', '.paymentio-badge-card', function (e) {
+        if ($(e.target).is('input[type="radio"]')) {
+            return;
+        }
         var $radio = $(this).find('input[type="radio"]');
         if (!$radio.is(':checked')) {
             $radio.prop('checked', true).trigger('change');

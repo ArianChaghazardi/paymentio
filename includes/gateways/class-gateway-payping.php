@@ -128,11 +128,16 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
 
         $data = $response['data'];
 
-        if ( isset( $data['code'] ) && ! empty( $data['code'] ) ) {
-            $code = sanitize_text_field( $data['code'] );
+        $payment_code = '';
+        if ( ! empty( $data['paymentCode'] ) ) {
+            $payment_code = sanitize_text_field( $data['paymentCode'] );
+        } elseif ( ! empty( $data['code'] ) ) {
+            $payment_code = sanitize_text_field( $data['code'] );
+        }
 
+        if ( ! empty( $payment_code ) ) {
             // Save PayPing code and clientRefId to order meta
-            $order->update_meta_data( '_paymentio_payping_code', $code );
+            $order->update_meta_data( '_paymentio_payping_code', $payment_code );
             $order->update_meta_data( '_paymentio_payping_client_ref', $client_ref );
             $order->update_meta_data( '_paymentio_payping_amount', $amount );
             $order->save();
@@ -146,7 +151,7 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
                 'order_id'        => $order->get_id(),
                 'gateway'         => $this->gateway_slug,
                 'gateway_title'   => $this->title,
-                'transaction_id'  => $code,
+                'transaction_id'  => $payment_code,
                 'reference_id'    => $client_ref,
                 'amount'          => $db_amount,
                 'currency'        => $db_currency,
@@ -158,9 +163,11 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
                 'message'         => 'در انتظار پرداخت توسط کاربر در درگاه پی پینگ',
             ) );
 
+            $redirect_url = ! empty( $data['url'] ) ? esc_url_raw( $data['url'] ) : ( 'https://api.payping.ir/v3/pay/start/' . $payment_code );
+
             return array(
-                'redirect_url'   => 'https://api.payping.ir/v3/pay/start/' . $code,
-                'transaction_id' => $code,
+                'redirect_url'   => $redirect_url,
+                'transaction_id' => $payment_code,
             );
         }
 
@@ -209,30 +216,46 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
             exit;
         }
 
-        // Parse return data from PayPing
-        $raw_data = isset( $_REQUEST['data'] ) ? wp_unslash( $_REQUEST['data'] ) : '';
-        $data     = json_decode( $raw_data, true ) ?: array();
-        $code     = $order->get_meta( '_paymentio_payping_code' );
+        // Parse return data from PayPing (handles both POST body and query parameters)
+        $payment_ref_id = isset( $_REQUEST['paymentRefId'] ) ? sanitize_text_field( $_REQUEST['paymentRefId'] ) : ( $_REQUEST['refid'] ?? '' );
+        $payment_code   = isset( $_REQUEST['paymentCode'] ) ? sanitize_text_field( $_REQUEST['paymentCode'] ) : ( $_REQUEST['code'] ?? $order->get_meta( '_paymentio_payping_code' ) );
+        $card_pan       = isset( $_REQUEST['cardNumber'] ) ? sanitize_text_field( $_REQUEST['cardNumber'] ) : '';
 
-        $ref_id   = isset( $data['paymentRefId'] ) ? sanitize_text_field( $data['paymentRefId'] ) : ( $_REQUEST['refid'] ?? '' );
-        $card_pan = isset( $data['cardNumber'] ) ? sanitize_text_field( $data['cardNumber'] ) : '';
+        // Also check raw json data if present
+        $raw_data = isset( $_REQUEST['data'] ) ? wp_unslash( $_REQUEST['data'] ) : '';
+        if ( ! empty( $raw_data ) ) {
+            $data = json_decode( $raw_data, true );
+            if ( is_array( $data ) ) {
+                if ( empty( $payment_ref_id ) && ! empty( $data['paymentRefId'] ) ) {
+                    $payment_ref_id = sanitize_text_field( $data['paymentRefId'] );
+                }
+                if ( empty( $payment_code ) && ! empty( $data['paymentCode'] ) ) {
+                    $payment_code = sanitize_text_field( $data['paymentCode'] );
+                }
+                if ( empty( $card_pan ) && ! empty( $data['cardNumber'] ) ) {
+                    $card_pan = sanitize_text_field( $data['cardNumber'] );
+                }
+            }
+        }
 
         // Check cancellation
         if ( isset( $_REQUEST['status'] ) && '0' === (string) $_REQUEST['status'] ) {
-            $this->handle_failure( $order, 'پرداخت توسط شما در صفحه بانک پی پینگ لغو شد.', $code );
+            $this->handle_failure( $order, 'پرداخت توسط شما در صفحه بانک پی پینگ لغو شد.', $payment_code );
             return;
         }
 
-        if ( empty( $ref_id ) && empty( $code ) ) {
-            $this->handle_failure( $order, 'اطلاعات بازگشتی از درگاه پی پینگ معتبر نیست.', $code );
+        if ( empty( $payment_ref_id ) && empty( $payment_code ) ) {
+            $this->handle_failure( $order, 'اطلاعات بازگشتی از درگاه پی پینگ معتبر نیست.', $payment_code );
             return;
         }
 
         $saved_amount = $order->get_meta( '_paymentio_payping_amount' );
         $amount       = ! empty( $saved_amount ) ? (int) $saved_amount : Paymentio_Helper::to_toman( $order->get_total(), $order->get_currency() );
         $payload      = array(
-            'refId'  => $ref_id,
-            'amount' => $amount,
+            'paymentRefId' => (int) $payment_ref_id,
+            'paymentCode'  => $payment_code,
+            'amount'       => (int) $amount,
+            'refId'        => $payment_ref_id,
         );
 
         $headers = array(
@@ -242,7 +265,7 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
         $response = Paymentio_Helper::remote_post( 'https://api.payping.ir/v3/pay/verify', $payload, $headers );
 
         if ( is_wp_error( $response ) ) {
-            $this->handle_failure( $order, 'خطا در ارتباط با سرور پی پینگ برای تایید تراکنش: ' . $response->get_error_message(), $code );
+            $this->handle_failure( $order, 'خطا در ارتباط با سرور پی پینگ برای تایید تراکنش: ' . $response->get_error_message(), $payment_code );
             return;
         }
 
@@ -251,7 +274,7 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
 
         if ( 200 === $http_code ) {
             $verified_card = $res_data['cardNumber'] ?? $card_pan;
-            $this->handle_success( $order, $ref_id ?: $code, $verified_card, $code, 'تراکنش با موفقیت در پی پینگ تایید شد.' );
+            $this->handle_success( $order, $payment_ref_id ?: $payment_code, $verified_card, $payment_code, 'تراکنش با موفقیت در پی پینگ تایید شد.' );
             return;
         }
 
@@ -262,6 +285,6 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
             $error_message = $res_data['detail'];
         }
 
-        $this->handle_failure( $order, $error_message, $code );
+        $this->handle_failure( $order, $error_message, $payment_code );
     }
 }
