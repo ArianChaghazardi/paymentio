@@ -80,6 +80,11 @@ class Paymentio {
         // Filter available gateways in checkout based on display mode
         add_filter( 'woocommerce_available_payment_gateways', array( $this, 'filter_available_gateways' ) );
 
+        // Currency Management (Toman / Rial)
+        add_filter( 'woocommerce_currencies', array( $this, 'add_persian_currencies' ) );
+        add_filter( 'woocommerce_currency_symbol', array( $this, 'add_persian_currency_symbols' ), 10, 2 );
+        add_filter( 'wc_price', array( $this, 'format_persian_price' ), 10, 4 );
+
         // Add action links to plugin list
         add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
     }
@@ -186,5 +191,53 @@ class Paymentio {
         }
 
         return $gateways;
+    }
+
+    /**
+     * Add Persian currencies to WooCommerce
+     *
+     * @param array $currencies
+     * @return array
+     */
+    public function add_persian_currencies( $currencies ) {
+        $currencies['IRT']  = 'تومان ایران';
+        $currencies['IRR']  = 'ریال ایران';
+        $currencies['IRHT'] = 'هزار تومان ایران';
+        $currencies['IRHR'] = 'هزار ریال ایران';
+        return $currencies;
+    }
+
+    /**
+     * Add symbols for Persian currencies
+     *
+     * @param string $symbol
+     * @param string $currency
+     * @return string
+     */
+    public function add_persian_currency_symbols( $symbol, $currency ) {
+        switch ( $currency ) {
+            case 'IRT':
+                return 'تومان';
+            case 'IRR':
+                return 'ریال';
+            case 'IRHT':
+                return 'هزار تومان';
+            case 'IRHR':
+                return 'هزار ریال';
+        }
+        return $symbol;
+    }
+
+    /**
+     * Format WooCommerce price with Persian digits
+     *
+     * @param string $return
+     * @param float $price
+     * @param array $args
+     * @param float $unformatted_price
+     * @return string
+     */
+    public function format_persian_price( $return, $price, $args, $unformatted_price ) {
+        return Paymentio_Helper::to_persian_digits( $return );
     }
 }

@@ -32,7 +32,7 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
     public function __construct() {
         $this->id                 = 'paymentio_payping';
         $this->gateway_slug       = 'payping';
-        $this->method_title       = 'پی پینگ (پیمنتیو)';
+        $this->method_title       = 'پی پینگ';
         $this->method_description = 'درگاه پرداخت آنلاین پی پینگ با پشتیبانی از پروتکل پرداخت مدرن و امنیت بالا';
 
         parent::__construct();
@@ -55,7 +55,7 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
                 'title'       => 'عنوان درگاه',
                 'type'        => 'text',
                 'description' => 'این عنوان در صفحه تسویه حساب به خریدار نمایش داده می شود.',
-                'default'     => 'پرداخت آنلاین با کارت های شتاب (پی پینگ)',
+                'default'     => 'پی پینگ',
             ),
             'description' => array(
                 'title'       => 'توضیحات درگاه',

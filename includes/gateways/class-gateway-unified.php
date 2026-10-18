@@ -19,7 +19,7 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
     public function __construct() {
         $this->id                 = 'paymentio_unified';
         $this->has_fields         = true;
-        $this->method_title       = 'درگاه یکپارچه هوشمند (پیمنتیو)';
+        $this->method_title       = 'درگاه یکپارچه هوشمند';
         $this->method_description = 'تجمیع تمام درگاه های فعال در یک درگاه واحد در صفحه تسویه حساب با امکان انتخاب مستقیم یا هدایت هوشمند';
 
         $this->init_form_fields();
@@ -136,9 +136,9 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
             echo '<label class="paymentio-badge-card' . esc_attr( $active_class ) . '">';
             echo '<input type="radio" name="paymentio_selected_subgateway" value="' . esc_attr( $slug ) . '" ' . $checked_attr . ' />';
             if ( ! empty( $gateway_obj->icon ) ) {
-                echo '<img src="' . esc_url( $gateway_obj->icon ) . '" alt="' . esc_attr( $gateway_obj->title ) . '" />';
+                echo '<span class="paymentio-badge-logo"><img src="' . esc_url( $gateway_obj->icon ) . '" alt="' . esc_attr( $gateway_obj->title ) . '" /></span>';
             }
-            echo '<span class="paymentio-badge-name">' . esc_html( $gateway_obj->method_title ) . '</span>';
+            echo '<span class="paymentio-badge-name">' . esc_html( $gateway_obj->title ) . '</span>';
             echo '</label>';
 
             $is_first = false;

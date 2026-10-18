@@ -23,6 +23,13 @@ if ( isset( $_POST['paymentio_save_general_settings'] ) && check_admin_referer( 
     update_option( 'paymentio_default_gateway', $default_gw );
     update_option( 'paymentio_auto_failover', $failover );
 
+    // Save Currency
+    $store_currency = sanitize_text_field( $_POST['store_currency'] ?? 'IRT' );
+    if ( in_array( $store_currency, array( 'IRT', 'IRR' ), true ) ) {
+        update_option( 'paymentio_currency', $store_currency );
+        update_option( 'woocommerce_currency', $store_currency );
+    }
+
     // Update unified gateway options
     $unified_settings = get_option( 'woocommerce_paymentio_unified_settings', array() );
     $unified_settings['enabled']         = ( 'unified' === $mode ) ? 'yes' : 'no';
@@ -34,6 +41,7 @@ if ( isset( $_POST['paymentio_save_general_settings'] ) && check_admin_referer( 
     $notice = 'تنظیمات عمومی پیمنتیو با موفقیت ذخیره شد.';
 }
 
+$current_currency   = get_option( 'paymentio_currency', get_option( 'woocommerce_currency', 'IRT' ) );
 $current_mode       = get_option( 'paymentio_display_mode', 'separate' );
 $current_default    = get_option( 'paymentio_default_gateway', 'zarinpal' );
 $current_failover   = get_option( 'paymentio_auto_failover', 'yes' );
@@ -58,6 +66,38 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
     <div class="paymentio-card">
         <form method="post" action="">
             <?php wp_nonce_field( 'paymentio_save_settings_nonce' ); ?>
+
+            <!-- Currency Selection Section -->
+            <div class="paymentio-settings-section">
+                <h4>واحد پول رسمی فروشگاه</h4>
+                <p style="color: #64748b; font-size: 13px; margin: 4px 0 14px 0;">تعیین واحد پول فروشگاه برای نمایش قیمت محصولات، سبد خرید، صورتحساب و ارسال مبالغ به درگاه های پرداخت.</p>
+
+                <div class="paymentio-mode-options">
+                    <label class="paymentio-mode-card <?php echo 'IRT' === $current_currency ? 'selected' : ''; ?>">
+                        <input type="radio" name="store_currency" value="IRT" <?php checked( $current_currency, 'IRT' ); ?> />
+                        <div class="paymentio-mode-content">
+                            <div class="paymentio-mode-header">
+                                <span class="dashicons dashicons-money-alt"></span>
+                                <strong>تومان (پیش فرض پیشنهادی)</strong>
+                            </div>
+                            <p>تمامی قیمت های محصولات و صورتحساب به تومان نمایش داده شده و مبالغ درگاه ها بر پایه تومان پردازش می شوند.</p>
+                        </div>
+                    </label>
+
+                    <label class="paymentio-mode-card <?php echo 'IRR' === $current_currency ? 'selected' : ''; ?>">
+                        <input type="radio" name="store_currency" value="IRR" <?php checked( $current_currency, 'IRR' ); ?> />
+                        <div class="paymentio-mode-content">
+                            <div class="paymentio-mode-header">
+                                <span class="dashicons dashicons-cart"></span>
+                                <strong>ریال</strong>
+                            </div>
+                            <p>قیمت های فروشگاه به ریال نمایش داده می شوند.</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <hr style="border:0; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
 
             <div class="paymentio-settings-section">
                 <h4>نحوه نمایش درگاه ها در تسویه حساب (Checkout)</h4>
