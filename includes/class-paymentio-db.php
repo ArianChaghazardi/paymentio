@@ -31,7 +31,7 @@ class Paymentio_DB {
         $table_name      = self::table_name();
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE $table_name (
+        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             order_id bigint(20) unsigned NOT NULL DEFAULT 0,
             gateway varchar(50) NOT NULL DEFAULT '',
@@ -49,7 +49,7 @@ class Paymentio_DB {
             message text NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            PRIMARY KEY  (id),
+            PRIMARY KEY (id),
             KEY order_id (order_id),
             KEY transaction_id (transaction_id),
             KEY reference_id (reference_id),
@@ -57,8 +57,7 @@ class Paymentio_DB {
             KEY created_at (created_at)
         ) $charset_collate;";
 
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta( $sql );
+        $wpdb->query( $sql );
     }
 
     /**
@@ -227,7 +226,6 @@ class Paymentio_DB {
         global $wpdb;
         $table = self::table_name();
 
-        // Check if table exists
         if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table ) ) !== $table ) {
             return array(
                 'total_count'    => 0,
