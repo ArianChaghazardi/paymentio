@@ -156,44 +156,46 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
                     <p>هنوز تراکنشی در سیستم ثبت نشده است.</p>
                 </div>
             <?php else : ?>
-                <table class="paymentio-table">
-                    <thead>
-                        <tr>
-                            <th>شماره سفارش</th>
-                            <th>درگاه</th>
-                            <th>مبلغ</th>
-                            <th>کد پیگیری</th>
-                            <th>خریدار</th>
-                            <th>وضعیت</th>
-                            <th>تاریخ ثبت</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ( $recent_tx['items'] as $tx ) : ?>
+                <div class="paymentio-table-responsive">
+                    <table class="paymentio-table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $tx->order_id . '&action=edit' ) ); ?>" class="paymentio-link">
-                                        #<?php echo esc_html( Paymentio_Helper::to_persian_digits( $tx->order_id ) ); ?>
-                                    </a>
-                                </td>
-                                <td><strong><?php echo esc_html( $tx->gateway_title ); ?></strong></td>
-                                <td><?php echo esc_html( Paymentio_Helper::format_price( $tx->amount, $tx->currency ) ); ?></td>
-                                <td><code><?php echo esc_html( $tx->reference_id ?: ( $tx->transaction_id ?: '-' ) ); ?></code></td>
-                                <td><?php echo esc_html( $tx->customer_name ?: 'مشتری مهمان' ); ?></td>
-                                <td>
-                                    <?php if ( 'completed' === $tx->status ) : ?>
-                                        <span class="paymentio-badge paymentio-badge-success">موفق</span>
-                                    <?php elseif ( 'pending' === $tx->status ) : ?>
-                                        <span class="paymentio-badge paymentio-badge-warning">در انتظار پرداخت</span>
-                                    <?php else : ?>
-                                        <span class="paymentio-badge paymentio-badge-danger">ناموفق</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo esc_html( Paymentio_Helper::to_persian_digits( $tx->created_at ) ); ?></td>
+                                <th>شماره سفارش</th>
+                                <th>درگاه</th>
+                                <th>مبلغ</th>
+                                <th>کد پیگیری</th>
+                                <th>خریدار</th>
+                                <th>وضعیت</th>
+                                <th>تاریخ ثبت</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ( $recent_tx['items'] as $tx ) : ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $tx->order_id . '&action=edit' ) ); ?>" class="paymentio-link">
+                                            #<?php echo esc_html( Paymentio_Helper::to_persian_digits( $tx->order_id ) ); ?>
+                                        </a>
+                                    </td>
+                                    <td><strong><?php echo esc_html( $tx->gateway_title ); ?></strong></td>
+                                    <td><?php echo esc_html( Paymentio_Helper::format_price( $tx->amount, $tx->currency ) ); ?></td>
+                                    <td><code><?php echo esc_html( $tx->reference_id ?: ( $tx->transaction_id ?: '-' ) ); ?></code></td>
+                                    <td><?php echo esc_html( $tx->customer_name ?: 'مشتری مهمان' ); ?></td>
+                                    <td>
+                                        <?php if ( 'completed' === $tx->status ) : ?>
+                                            <span class="paymentio-badge paymentio-badge-success">موفق</span>
+                                        <?php elseif ( 'pending' === $tx->status ) : ?>
+                                            <span class="paymentio-badge paymentio-badge-warning">در انتظار پرداخت</span>
+                                        <?php else : ?>
+                                            <span class="paymentio-badge paymentio-badge-danger">ناموفق</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?php echo esc_html( Paymentio_Helper::to_persian_digits( $tx->created_at ) ); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>

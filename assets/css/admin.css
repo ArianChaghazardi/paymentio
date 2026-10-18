@@ -43,6 +43,7 @@
 .paymentio-wrap {
     font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     max-width: 1200px;
+    width: calc(100% - 20px);
     margin: 20px 20px 40px 0;
     color: #0f172a;
     box-sizing: border-box;
@@ -153,6 +154,14 @@
     gap: 8px;
     overflow-x: auto;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.paymentio-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .paymentio-nav-item {
@@ -166,6 +175,8 @@
     gap: 8px;
     border-bottom: 3px solid transparent;
     transition: all 0.2s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .paymentio-nav-item:hover {
@@ -392,8 +403,13 @@
 .paymentio-gw-card-footer {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
     border-top: 1px solid #f1f5f9;
     padding-top: 16px;
+}
+
+.paymentio-gw-card-footer .paymentio-btn {
+    flex: 1 1 auto;
 }
 
 /* 7. Switch Toggle */
@@ -501,8 +517,18 @@
 }
 
 /* 9. Tables */
+.paymentio-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 0 16px 16px;
+}
+
 .paymentio-table {
     width: 100%;
+    min-width: 680px;
     border-collapse: collapse;
     font-size: 13px;
     text-align: right;
@@ -514,6 +540,7 @@
     color: #475569;
     font-weight: 700;
     border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
 }
 
 .paymentio-table td {
@@ -556,20 +583,25 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 99999;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 .paymentio-modal-dialog {
     background: #ffffff;
     border-radius: 16px;
-    width: 90%;
+    width: 100%;
     max-width: 550px;
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25);
     overflow: hidden;
     animation: paymentioSlideDown 0.25s ease-out;
 }
@@ -586,6 +618,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .paymentio-modal-header h3 {
@@ -609,8 +642,10 @@
 
 .paymentio-modal-body {
     padding: 24px;
-    max-height: 70vh;
+    max-height: calc(90vh - 130px);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
 }
 
 .paymentio-modal-footer {
@@ -620,6 +655,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 /* 11. Form Inputs */
@@ -798,4 +834,220 @@
 .paymentio-footer a {
     color: #3b82f6;
     text-decoration: none;
+}
+
+/* 15. Filter Bar & Form */
+.paymentio-filter-bar {
+    padding: 16px 20px;
+}
+
+.paymentio-filter-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.paymentio-filter-inputs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1 1 auto;
+}
+
+.paymentio-search-input {
+    min-width: 240px;
+    flex: 1 1 240px;
+}
+
+.paymentio-filter-inputs select.paymentio-input {
+    width: auto;
+    min-width: 150px;
+}
+
+.paymentio-filter-count {
+    font-size: 13px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+/* 16. Comprehensive Responsive Design */
+@media (max-width: 1024px) {
+    .paymentio-wrap {
+        width: 100%;
+        margin: 15px 15px 30px 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .paymentio-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .paymentio-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 782px) {
+    .paymentio-wrap {
+        margin: 10px 10px 30px 10px;
+        width: auto;
+        max-width: 100%;
+    }
+
+    .paymentio-header {
+        padding: 18px 16px 0 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .paymentio-header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .paymentio-author-badge {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .paymentio-brand {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .paymentio-nav-item {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .paymentio-card {
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .paymentio-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .paymentio-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .paymentio-gateways-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .paymentio-mode-options {
+        grid-template-columns: 1fr;
+    }
+
+    .paymentio-api-test-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .paymentio-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paymentio-filter-inputs {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .paymentio-filter-inputs .paymentio-input,
+    .paymentio-filter-inputs select.paymentio-input,
+    .paymentio-filter-inputs .paymentio-btn,
+    .paymentio-search-input {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .paymentio-filter-count {
+        width: 100%;
+        text-align: center;
+        margin-top: 6px;
+    }
+
+    .paymentio-modal {
+        padding: 10px;
+    }
+
+    .paymentio-modal-dialog {
+        width: 100% !important;
+        max-height: 92vh;
+        border-radius: 12px;
+    }
+
+    .paymentio-modal-body {
+        padding: 16px;
+        max-height: calc(92vh - 120px);
+    }
+
+    .paymentio-modal-footer {
+        flex-direction: column-reverse;
+        padding: 12px 16px;
+        gap: 8px;
+    }
+
+    .paymentio-modal-footer .paymentio-btn {
+        width: 100%;
+    }
+
+    .paymentio-gw-card-footer {
+        flex-direction: column;
+    }
+
+    .paymentio-gw-card-footer .paymentio-btn {
+        width: 100%;
+    }
+
+    .paymentio-table th,
+    .paymentio-table td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .paymentio-title {
+        font-size: 18px;
+        flex-wrap: wrap;
+    }
+
+    .paymentio-logo-badge {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+    }
+
+    .paymentio-stat-card {
+        padding: 14px;
+    }
+
+    .paymentio-stat-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .paymentio-stat-value {
+        font-size: 18px;
+    }
+
+    .paymentio-btn {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
 }
