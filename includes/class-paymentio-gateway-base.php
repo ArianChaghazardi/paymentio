@@ -63,6 +63,25 @@ abstract class Paymentio_Gateway_Base extends WC_Payment_Gateway {
     }
 
     /**
+     * Check if gateway is available for checkout
+     *
+     * @return bool
+     */
+    public function is_available() {
+        $is_available = parent::is_available();
+        if ( ! $is_available ) {
+            return false;
+        }
+
+        // In unified mode, individual gateways are hidden from checkout
+        if ( ! is_admin() && 'unified' === get_option( 'paymentio_display_mode', 'separate' ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get callback URL for this gateway
      *
      * @param int $order_id

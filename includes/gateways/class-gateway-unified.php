@@ -34,6 +34,20 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
     }
 
     /**
+     * Check if gateway is available for checkout
+     *
+     * @return bool
+     */
+    public function is_available() {
+        if ( 'unified' !== get_option( 'paymentio_display_mode', 'separate' ) ) {
+            return false;
+        }
+
+        $active = Paymentio::instance()->get_active_sub_gateways();
+        return ! empty( $active );
+    }
+
+    /**
      * Save admin options and sync paymentio_display_mode
      */
     public function process_admin_options() {
