@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="gradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#1e40af" />
+    </linearGradient>
+    <linearGradient id="gradAcc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#gradBg)" filter="url(#shadow)"/>
+
+  <!-- Bank Card Graphic -->
+  <rect x="96" y="140" width="320" height="200" rx="24" fill="url(#gradAcc)" opacity="0.9"/>
+  <rect x="96" y="180" width="320" height="40" fill="#0f172a" opacity="0.6"/>
+  <rect x="136" y="250" width="60" height="44" rx="8" fill="#fbbf24" opacity="0.9"/>
+
+  <!-- Stylized P Letter -->
+  <path d="M260 250 H320 A24 24 0 0 1 320 298 H260 Z" fill="#ffffff" opacity="0.95"/>
+  <rect x="240" y="235" width="20" height="80" rx="6" fill="#ffffff"/>
+
+  <!-- Network dots -->
+  <circle cx="360" cy="274" r="18" fill="#ef4444" opacity="0.8"/>
+  <circle cx="384" cy="274" r="18" fill="#f59e0b" opacity="0.8"/>
+</svg>
