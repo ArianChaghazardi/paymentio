@@ -48,6 +48,17 @@ function paymentio_activate_plugin() {
 }
 
 /**
+ * Declare WooCommerce HPOS and Feature Compatibility
+ */
+add_action( 'before_woocommerce_init', 'paymentio_declare_compatibility' );
+function paymentio_declare_compatibility() {
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', PAYMENTIO_FILE, true );
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', PAYMENTIO_FILE, true );
+    }
+}
+
+/**
  * Check requirements and bootstrap plugin
  */
 add_action( 'plugins_loaded', 'paymentio_bootstrap', 11 );

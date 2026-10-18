@@ -42,7 +42,7 @@ $total_pages  = ceil( $total_items / $per_page );
             <input type="hidden" name="page" value="paymentio-transactions" />
 
             <div class="paymentio-filter-inputs">
-                <input type="text" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="جستجو بر اساس سفارش، کد پیگیری، نام یا شماره تماس..." class="paymentio-input" style="min-width: 280px;" />
+                <input type="text" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="جستجو بر اساس سفارش، کد پیگیری، نام یا شماره تماس..." class="paymentio-input paymentio-search-input" />
 
                 <select name="status" class="paymentio-input">
                     <option value="">همه وضعیت ها</option>
@@ -79,7 +79,8 @@ $total_pages  = ceil( $total_items / $per_page );
                     <p>هیچ تراکنشی با مشخصات وارد شده یافت نشد.</p>
                 </div>
             <?php else : ?>
-                <table class="paymentio-table">
+                <div class="paymentio-table-responsive">
+                    <table class="paymentio-table">
                     <thead>
                         <tr>
                             <th>شناسه</th>
@@ -148,6 +149,7 @@ $total_pages  = ceil( $total_items / $per_page );
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                </div>
 
                 <!-- Pagination -->
                 <?php if ( $total_pages > 1 ) : ?>

@@ -94,7 +94,8 @@ $max_exec_time     = ini_get( 'max_execution_time' );
             <h3>اطلاعات و پیش نیازهای سیستمی هاست</h3>
         </div>
         <div class="paymentio-card-body" style="padding: 0;">
-            <table class="paymentio-table">
+            <div class="paymentio-table-responsive">
+                <table class="paymentio-table">
                 <tbody>
                     <tr>
                         <td style="width: 250px;"><strong>نسخه PHP سرور</strong></td>
@@ -155,6 +156,7 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>
