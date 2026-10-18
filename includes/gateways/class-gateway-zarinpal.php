@@ -138,7 +138,15 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
             return new WP_Error( 'missing_merchant', 'کد مرچنت زرین پال در تنظیمات وارد نشده است.' );
         }
 
-        $amount       = Paymentio_Helper::to_toman( $order->get_total(), $order->get_currency() );
+        $currency = strtoupper( trim( $order->get_currency() ) );
+        if ( 'IRR' === $currency ) {
+            $amount           = Paymentio_Helper::to_rial( $order->get_total(), $currency );
+            $gateway_currency = 'IRR';
+        } else {
+            $amount           = Paymentio_Helper::to_toman( $order->get_total(), $currency );
+            $gateway_currency = 'IRT';
+        }
+
         $callback_url = $this->get_callback_url( $order->get_id() );
         $description  = $this->get_order_description( $order );
         $mobile       = $order->get_billing_phone();
@@ -156,6 +164,7 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
         $payload = array(
             'merchant_id'  => $merchant,
             'amount'       => $amount,
+            'currency'     => $gateway_currency,
             'callback_url' => $callback_url,
             'description'  => $description,
             'metadata'     => (object) $metadata,
@@ -172,8 +181,10 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
         if ( isset( $data['data']['code'] ) && 100 === (int) $data['data']['code'] ) {
             $authority = sanitize_text_field( $data['data']['authority'] );
 
-            // Save authority to order meta
+            // Save authority and amount to order meta
             $order->update_meta_data( '_paymentio_zarinpal_authority', $authority );
+            $order->update_meta_data( '_paymentio_zarinpal_amount', $amount );
+            $order->update_meta_data( '_paymentio_zarinpal_currency', $gateway_currency );
             $order->save();
 
             // Insert transaction record into database
@@ -183,7 +194,7 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
                 'gateway_title'   => $this->title,
                 'transaction_id'  => $authority,
                 'amount'          => $amount,
-                'currency'        => 'IRT',
+                'currency'        => $gateway_currency,
                 'status'          => 'pending',
                 'customer_name'   => trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
                 'customer_mobile' => $mobile,
@@ -240,7 +251,16 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
             exit;
         }
 
-        $amount    = Paymentio_Helper::to_toman( $order->get_total(), $order->get_currency() );
+        $saved_amount = $order->get_meta( '_paymentio_zarinpal_amount' );
+        if ( ! empty( $saved_amount ) ) {
+            $amount = (int) $saved_amount;
+        } else {
+            $currency = strtoupper( trim( $order->get_currency() ) );
+            $amount   = ( 'IRR' === $currency )
+                ? Paymentio_Helper::to_rial( $order->get_total(), $currency )
+                : Paymentio_Helper::to_toman( $order->get_total(), $currency );
+        }
+
         $merchant  = ( 'yes' === $this->sandbox ) ? 'sandbox' : $this->merchant_id;
         $endpoints = $this->get_endpoints();
 

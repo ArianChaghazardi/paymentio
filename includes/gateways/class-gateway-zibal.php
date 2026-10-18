@@ -157,16 +157,21 @@ class Paymentio_Gateway_Zibal extends Paymentio_Gateway_Base {
 
             // Save trackId to order meta
             $order->update_meta_data( '_paymentio_zibal_track_id', $track_id );
+            $order->update_meta_data( '_paymentio_zibal_amount', $amount );
             $order->save();
 
             // Insert transaction record into database
+            $currency    = strtoupper( trim( $order->get_currency() ) );
+            $db_amount   = ( 'IRR' === $currency ) ? Paymentio_Helper::to_rial( $order->get_total(), $currency ) : Paymentio_Helper::to_toman( $order->get_total(), $currency );
+            $db_currency = ( 'IRR' === $currency ) ? 'IRR' : 'IRT';
+
             Paymentio_DB::insert( array(
                 'order_id'        => $order->get_id(),
                 'gateway'         => $this->gateway_slug,
                 'gateway_title'   => $this->title,
                 'transaction_id'  => $track_id,
-                'amount'          => Paymentio_Helper::to_toman( $order->get_total(), $order->get_currency() ),
-                'currency'        => 'IRT',
+                'amount'          => $db_amount,
+                'currency'        => $db_currency,
                 'status'          => 'pending',
                 'customer_name'   => trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
                 'customer_mobile' => $mobile,
