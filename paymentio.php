@@ -45,6 +45,10 @@ function paymentio_activate_plugin() {
     if ( false === get_option( 'paymentio_auto_failover' ) ) {
         update_option( 'paymentio_auto_failover', 'yes' );
     }
+    if ( false === get_option( 'paymentio_currency' ) ) {
+        update_option( 'paymentio_currency', 'IRT' );
+        update_option( 'woocommerce_currency', 'IRT' );
+    }
 }
 
 /**

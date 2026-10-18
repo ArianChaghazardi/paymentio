@@ -32,7 +32,7 @@ class Paymentio_Gateway_Zibal extends Paymentio_Gateway_Base {
     public function __construct() {
         $this->id                 = 'paymentio_zibal';
         $this->gateway_slug       = 'zibal';
-        $this->method_title       = 'زیبال (پیمنتیو)';
+        $this->method_title       = 'زیبال';
         $this->method_description = 'درگاه پرداخت آنلاین زیبال با مسیردهی هوشمند و پایداری بالا در شبکه بانکی شتاب';
 
         parent::__construct();
@@ -55,7 +55,7 @@ class Paymentio_Gateway_Zibal extends Paymentio_Gateway_Base {
                 'title'       => 'عنوان درگاه',
                 'type'        => 'text',
                 'description' => 'این عنوان در صفحه تسویه حساب به خریدار نمایش داده می شود.',
-                'default'     => 'پرداخت آنلاین با کارت های شتاب (زیبال)',
+                'default'     => 'زیبال',
             ),
             'description' => array(
                 'title'       => 'توضیحات درگاه',

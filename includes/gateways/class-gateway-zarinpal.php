@@ -39,7 +39,7 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
     public function __construct() {
         $this->id                 = 'paymentio_zarinpal';
         $this->gateway_slug       = 'zarinpal';
-        $this->method_title       = 'زرین پال (پیمنتیو)';
+        $this->method_title       = 'زرین پال';
         $this->method_description = 'درگاه پرداخت آنلاین زرین پال با پشتیبانی از کلیه کارت های عضو شتاب و زرین گیت';
 
         parent::__construct();
@@ -63,7 +63,7 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
                 'title'       => 'عنوان درگاه',
                 'type'        => 'text',
                 'description' => 'این عنوان در صفحه تسویه حساب به خریدار نمایش داده می شود.',
-                'default'     => 'پرداخت آنلاین با کارت های شتاب (زرین پال)',
+                'default'     => 'زرین پال',
             ),
             'description' => array(
                 'title'       => 'توضیحات درگاه',
