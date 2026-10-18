@@ -97,6 +97,12 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
                 'label'   => 'نمایش دکمه های گرافیکی درگاه ها برای انتخاب توسط مشتری در فرم تسویه حساب',
                 'default' => 'yes',
             ),
+            'smart_failover' => array(
+                'title'   => 'سوئیچ خودکار درگاه در صورت خطا (Failover)',
+                'type'    => 'checkbox',
+                'label'   => 'در صورت بروز خطا در درگاه انتخابی، سفارش به صورت خودکار به درگاه فعال بعدی منتقل شود.',
+                'default' => 'no',
+            ),
         );
     }
 
@@ -182,17 +188,24 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
         if ( is_wp_error( $result ) ) {
             $error_message = $result->get_error_message();
 
-            // Smart failover: try next active gateway if available!
-            foreach ( $active_gateways as $slug => $sub_gw ) {
-                if ( $slug === $selected_slug ) {
-                    continue;
-                }
-                $failover_res = $sub_gw->send_to_provider( wc_get_order( $order_id ) );
-                if ( ! is_wp_error( $failover_res ) ) {
-                    return array(
-                        'result'   => 'success',
-                        'redirect' => $failover_res['redirect_url'],
-                    );
+            // Smart failover: only if explicitly enabled in settings
+            $smart_failover = 'yes' === $this->get_option( 'smart_failover', 'no' );
+            if ( $smart_failover ) {
+                foreach ( $active_gateways as $slug => $sub_gw ) {
+                    if ( $slug === $selected_slug ) {
+                        continue;
+                    }
+                    $failover_res = $sub_gw->send_to_provider( wc_get_order( $order_id ) );
+                    if ( ! is_wp_error( $failover_res ) ) {
+                        $order = wc_get_order( $order_id );
+                        if ( $order ) {
+                            $order->add_order_note( "اتصال به درگاه انتخابی ({$selected_slug}) با خطا مواجه شد. سفارش به صورت خودکار به درگاه {$slug} منتقل گردید." );
+                        }
+                        return array(
+                            'result'   => 'success',
+                            'redirect' => $failover_res['redirect_url'],
+                        );
+                    }
                 }
             }
 
