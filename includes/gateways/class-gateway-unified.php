@@ -189,7 +189,7 @@ class Paymentio_Gateway_Unified extends WC_Payment_Gateway {
             $error_message = $result->get_error_message();
 
             // Smart failover: only if explicitly enabled in settings
-            $smart_failover = 'yes' === $this->get_option( 'smart_failover', 'no' );
+            $smart_failover = ( 'yes' === $this->get_option( 'smart_failover', 'no' ) ) || ( 'yes' === get_option( 'paymentio_auto_failover', 'no' ) );
             if ( $smart_failover ) {
                 foreach ( $active_gateways as $slug => $sub_gw ) {
                     if ( $slug === $selected_slug ) {

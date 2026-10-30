@@ -36,6 +36,7 @@ if ( isset( $_POST['paymentio_save_general_settings'] ) && check_admin_referer( 
     $unified_settings['title']           = $unified_title;
     $unified_settings['description']     = $unified_desc;
     $unified_settings['default_gateway'] = $default_gw;
+    $unified_settings['smart_failover']  = $failover;
     update_option( 'woocommerce_paymentio_unified_settings', $unified_settings );
 
     $notice = 'تنظیمات عمومی پیمنتیو با موفقیت ذخیره شد.';

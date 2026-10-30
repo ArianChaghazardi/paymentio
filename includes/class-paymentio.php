@@ -85,8 +85,32 @@ class Paymentio {
         add_filter( 'woocommerce_currency_symbol', array( $this, 'add_persian_currency_symbols' ), 10, 2 );
         add_filter( 'wc_price', array( $this, 'format_persian_price' ), 10, 4 );
 
+        // Gateway Referrer-Policy preservation for external bank redirects
+        add_action( 'wp_head', array( $this, 'add_referrer_policy_meta' ), 1 );
+        add_action( 'template_redirect', array( $this, 'send_referrer_policy_header' ) );
+
         // Add action links to plugin list
         add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
+    }
+
+    /**
+     * Add Referrer-Policy meta tag on checkout and payment pages
+     */
+    public function add_referrer_policy_meta() {
+        if ( ( function_exists( 'is_checkout' ) && is_checkout() ) || ( function_exists( 'is_checkout_pay_page' ) && is_checkout_pay_page() ) ) {
+            echo '<meta name="referrer" content="strict-origin-when-cross-origin" />' . "\n";
+        }
+    }
+
+    /**
+     * Send Referrer-Policy HTTP header on checkout and payment pages
+     */
+    public function send_referrer_policy_header() {
+        if ( ( function_exists( 'is_checkout' ) && is_checkout() ) || ( function_exists( 'is_checkout_pay_page' ) && is_checkout_pay_page() ) ) {
+            if ( ! headers_sent() ) {
+                header( 'Referrer-Policy: strict-origin-when-cross-origin' );
+            }
+        }
     }
 
     /**

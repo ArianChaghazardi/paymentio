@@ -128,6 +128,35 @@ class Paymentio_Helper {
     }
 
     /**
+     * Get server public outbound IP address
+     *
+     * @return string
+     */
+    public static function get_server_ip() {
+        $cached = get_transient( 'paymentio_server_ip' );
+        if ( ! empty( $cached ) && filter_var( $cached, FILTER_VALIDATE_IP ) ) {
+            return $cached;
+        }
+
+        $server_ip = $_SERVER['SERVER_ADDR'] ?? '';
+        if ( ! empty( $server_ip ) && filter_var( $server_ip, FILTER_VALIDATE_IP ) && '127.0.0.1' !== $server_ip ) {
+            set_transient( 'paymentio_server_ip', $server_ip, DAY_IN_SECONDS );
+            return $server_ip;
+        }
+
+        $response = wp_safe_remote_get( 'https://api.ipify.org', array( 'timeout' => 4 ) );
+        if ( ! is_wp_error( $response ) ) {
+            $ip = trim( wp_remote_retrieve_body( $response ) );
+            if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+                set_transient( 'paymentio_server_ip', $ip, DAY_IN_SECONDS );
+                return $ip;
+            }
+        }
+
+        return $server_ip ?: '127.0.0.1';
+    }
+
+    /**
      * Perform HTTP POST request with timeout and fallback
      *
      * @param string $url

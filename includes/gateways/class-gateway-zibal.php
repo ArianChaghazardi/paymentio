@@ -189,6 +189,13 @@ class Paymentio_Gateway_Zibal extends Paymentio_Gateway_Base {
         $error_code    = $data['result'] ?? 'Unknown';
         $error_message = $this->get_error_message( $error_code );
 
+        if ( 115 === (int) $error_code ) {
+            $server_ip = Paymentio_Helper::get_server_ip();
+            $error_message = 'آی پی سرور (' . $server_ip . ') در پنل زیبال تعریف یا مجاز نشده است. لطفاً آی پی سرور را در پنل کاربری زیبال در بخش تنظیمات درگاه ثبت کنید.';
+        } elseif ( ! empty( $data['message'] ) && is_string( $data['message'] ) ) {
+            $error_message .= ' (' . esc_html( $data['message'] ) . ')';
+        }
+
         return new WP_Error( 'zibal_request_failed', $error_message );
     }
 
@@ -268,6 +275,7 @@ class Paymentio_Gateway_Zibal extends Paymentio_Gateway_Base {
             105 => 'مبلغ تراکنش نامعتبر است (حداقل مبلغ مجاز ۱۰۰۰ ریال است)',
             106 => 'آدرس بازگشت (CallbackUrl) نامعتبر است',
             113 => 'مبلغ تراکنش از سقف مجاز روزانه بیشتر است',
+            115 => 'آی پی سرور در پنل زیبال مجاز یا ثبت نشده است',
             202 => 'سفارش هنوز توسط کاربر پرداخت نشده است',
             203 => 'شناسه ارسالی برای تایید نامعتبر است',
         );

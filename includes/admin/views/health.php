@@ -152,7 +152,7 @@ $max_exec_time     = ini_get( 'max_execution_time' );
 
                     <tr>
                         <td><strong>آی پی خروجی سرور شما</strong></td>
-                        <td><code><?php echo esc_html( Paymentio_Helper::get_client_ip() ); ?></code> (جهت ثبت در پنل پرداخت یارها در صورت نیاز به آی پی مجاز)</td>
+                        <td><code><?php echo esc_html( Paymentio_Helper::get_server_ip() ); ?></code> (جهت ثبت در پنل پرداخت یارها مانند زیبال در صورت نیاز به آی پی مجاز)</td>
                     </tr>
                 </tbody>
             </table>

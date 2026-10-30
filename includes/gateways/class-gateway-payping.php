@@ -101,9 +101,21 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
         $client_ref   = (string) $order->get_id() . '_' . time();
 
         $payer_identity = '';
-        if ( ! empty( $mobile ) && preg_match( '/^09[0-9]{9}$/', Paymentio_Helper::to_english_digits( $mobile ) ) ) {
-            $payer_identity = Paymentio_Helper::to_english_digits( $mobile );
-        } elseif ( ! empty( $email ) && filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+        if ( ! empty( $mobile ) ) {
+            $clean_mobile = Paymentio_Helper::to_english_digits( $mobile );
+            $clean_mobile = preg_replace( '/[^0-9]/', '', $clean_mobile );
+            if ( str_starts_with( $clean_mobile, '0098' ) ) {
+                $clean_mobile = '0' . substr( $clean_mobile, 4 );
+            } elseif ( str_starts_with( $clean_mobile, '98' ) && strlen( $clean_mobile ) === 12 ) {
+                $clean_mobile = '0' . substr( $clean_mobile, 2 );
+            } elseif ( strlen( $clean_mobile ) === 10 && str_starts_with( $clean_mobile, '9' ) ) {
+                $clean_mobile = '0' . $clean_mobile;
+            }
+            if ( preg_match( '/^09[0-9]{9}$/', $clean_mobile ) ) {
+                $payer_identity = $clean_mobile;
+            }
+        }
+        if ( empty( $payer_identity ) && ! empty( $email ) && filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
             $payer_identity = $email;
         }
 
@@ -216,21 +228,44 @@ class Paymentio_Gateway_Payping extends Paymentio_Gateway_Base {
             exit;
         }
 
-        // Parse return data from PayPing (handles both POST body and query parameters)
-        $payment_ref_id = isset( $_REQUEST['paymentRefId'] ) ? sanitize_text_field( $_REQUEST['paymentRefId'] ) : ( $_REQUEST['refid'] ?? '' );
+        // Parse return data from PayPing (handles POST body, query parameters, and raw JSON input)
+        $payment_ref_id = isset( $_REQUEST['paymentRefId'] ) ? sanitize_text_field( $_REQUEST['paymentRefId'] ) : ( $_REQUEST['refId'] ?? ( $_REQUEST['refid'] ?? '' ) );
         $payment_code   = isset( $_REQUEST['paymentCode'] ) ? sanitize_text_field( $_REQUEST['paymentCode'] ) : ( $_REQUEST['code'] ?? $order->get_meta( '_paymentio_payping_code' ) );
-        $card_pan       = isset( $_REQUEST['cardNumber'] ) ? sanitize_text_field( $_REQUEST['cardNumber'] ) : '';
+        $card_pan       = isset( $_REQUEST['cardNumber'] ) ? sanitize_text_field( $_REQUEST['cardNumber'] ) : ( $_REQUEST['cardnumber'] ?? ( $_REQUEST['cardHashPan'] ?? '' ) );
 
-        // Also check raw json data if present
+        // Read raw JSON input if sent via application/json
+        $raw_input = file_get_contents( 'php://input' );
+        if ( ! empty( $raw_input ) ) {
+            $json_payload = json_decode( $raw_input, true );
+            if ( is_array( $json_payload ) ) {
+                if ( empty( $payment_ref_id ) ) {
+                    $payment_ref_id = $json_payload['paymentRefId'] ?? ( $json_payload['refId'] ?? ( $json_payload['refid'] ?? '' ) );
+                }
+                if ( empty( $payment_code ) ) {
+                    $payment_code = $json_payload['paymentCode'] ?? ( $json_payload['code'] ?? '' );
+                }
+                if ( empty( $card_pan ) ) {
+                    $card_pan = $json_payload['cardNumber'] ?? ( $json_payload['cardnumber'] ?? ( $json_payload['cardHashPan'] ?? '' ) );
+                }
+            }
+        }
+
+        // Also check raw json data parameter if present
         $raw_data = isset( $_REQUEST['data'] ) ? wp_unslash( $_REQUEST['data'] ) : '';
         if ( ! empty( $raw_data ) ) {
             $data = json_decode( $raw_data, true );
             if ( is_array( $data ) ) {
                 if ( empty( $payment_ref_id ) && ! empty( $data['paymentRefId'] ) ) {
                     $payment_ref_id = sanitize_text_field( $data['paymentRefId'] );
+                } elseif ( empty( $payment_ref_id ) && ! empty( $data['refId'] ) ) {
+                    $payment_ref_id = sanitize_text_field( $data['refId'] );
+                } elseif ( empty( $payment_ref_id ) && ! empty( $data['refid'] ) ) {
+                    $payment_ref_id = sanitize_text_field( $data['refid'] );
                 }
                 if ( empty( $payment_code ) && ! empty( $data['paymentCode'] ) ) {
                     $payment_code = sanitize_text_field( $data['paymentCode'] );
+                } elseif ( empty( $payment_code ) && ! empty( $data['code'] ) ) {
+                    $payment_code = sanitize_text_field( $data['code'] );
                 }
                 if ( empty( $card_pan ) && ! empty( $data['cardNumber'] ) ) {
                     $card_pan = sanitize_text_field( $data['cardNumber'] );
