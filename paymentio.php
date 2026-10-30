@@ -4,7 +4,7 @@
  * Plugin URI: https://hectortm.ir
  * Description: افزونه جامع، ماژولار و مدرن درگاه های پرداخت ووکامرس با پشتیبانی از زرین پال، زیبال، پی پینگ و سیستم هدایت هوشمند بانکی.
  * Version: 1.0.0
- * Author: آرین چقازردی در هکتور تیم (Hector Team)
+ * Author: آرین چقازردی در هکتورتیم (HectorTM)
  * Author URI: https://hectortm.ir
  * Text Domain: paymentio
  * Domain Path: /languages

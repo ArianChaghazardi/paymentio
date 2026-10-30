@@ -195,7 +195,7 @@ class Paymentio_Admin {
                     </div>
                 </div>
                 <div class="paymentio-author-badge">
-                    <span>توسعه دهنده: <strong>آرین چقازردی</strong> در <strong>هکتور تیم</strong></span>
+                    <span>توسعه دهنده: <strong>آرین چقازردی</strong> در <strong>هکتورتیم</strong></span>
                     <a href="https://hectortm.ir" target="_blank" class="paymentio-link">hectortm.ir</a>
                 </div>
             </div>
@@ -218,7 +218,7 @@ class Paymentio_Admin {
     private function render_footer() {
         ?>
         <div class="paymentio-footer">
-            <p>افزونه پرداخت ووکامرس <strong>پیمنتیو</strong> نسخه <?php echo esc_html( PAYMENTIO_VERSION ); ?> | طراحی شده توسط <a href="https://arianchaghazardi.ir" target="_blank">آرین چقازردی</a> در <a href="https://hectortm.ir" target="_blank">هکتور تیم (Hector Team)</a></p>
+            <p>افزونه پرداخت ووکامرس <strong>پیمنتیو</strong> نسخه <?php echo esc_html( PAYMENTIO_VERSION ); ?> | طراحی شده توسط <a href="https://arianchaghazardi.ir" target="_blank">آرین چقازردی</a> در <a href="https://hectortm.ir" target="_blank">هکتورتیم (HectorTM)</a></p>
         </div>
         <?php
     }
