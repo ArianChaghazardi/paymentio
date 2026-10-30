@@ -203,10 +203,24 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
                 'message'         => 'در انتظار پرداخت توسط کاربر در درگاه زرین پال',
             ) );
 
-            $redirect_url = $endpoints['pay'] . $authority;
+            $pay_url = $endpoints['pay'] . $authority;
             if ( 'yes' === $this->zaringate && 'yes' !== $this->sandbox ) {
-                $redirect_url .= '/ZarinGate';
+                $pay_url .= '/ZarinGate';
             }
+
+            // Save direct pay URL to order meta
+            $order->update_meta_data( '_paymentio_zarinpal_pay_url', $pay_url );
+            $order->save();
+
+            // Generate intermediate redirect URL to guarantee referrer transmission from the store domain
+            $redirect_url = add_query_arg(
+                array(
+                    'paymentio_action' => 'redirect_zarinpal',
+                    'order_id'         => $order->get_id(),
+                    'order_key'        => $order->get_order_key(),
+                ),
+                home_url( '/' )
+            );
 
             return array(
                 'redirect_url'   => $redirect_url,
@@ -225,8 +239,8 @@ class Paymentio_Gateway_Zarinpal extends Paymentio_Gateway_Base {
      */
     public function process_callback() {
         $order_id  = isset( $_GET['wc_order'] ) ? absint( $_GET['wc_order'] ) : 0;
-        $authority = isset( $_GET['Authority'] ) ? sanitize_text_field( $_GET['Authority'] ) : '';
-        $status    = isset( $_GET['Status'] ) ? sanitize_text_field( $_GET['Status'] ) : '';
+        $authority = isset( $_GET['Authority'] ) ? sanitize_text_field( $_GET['Authority'] ) : ( $_GET['authority'] ?? '' );
+        $status    = isset( $_GET['Status'] ) ? sanitize_text_field( $_GET['Status'] ) : ( $_GET['status'] ?? '' );
 
         if ( ! $order_id || empty( $authority ) ) {
             wp_safe_redirect( wc_get_checkout_url() );

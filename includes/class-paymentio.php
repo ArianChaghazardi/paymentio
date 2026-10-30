@@ -88,9 +88,154 @@ class Paymentio {
         // Gateway Referrer-Policy preservation for external bank redirects
         add_action( 'wp_head', array( $this, 'add_referrer_policy_meta' ), 1 );
         add_action( 'template_redirect', array( $this, 'send_referrer_policy_header' ) );
+        add_action( 'template_redirect', array( $this, 'maybe_render_gateway_redirect' ), 5 );
 
         // Add action links to plugin list
         add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
+    }
+
+    /**
+     * Handle intermediate payment gateway redirection to ensure browser passes valid referrer header
+     */
+    public function maybe_render_gateway_redirect() {
+        if ( ! isset( $_GET['paymentio_action'] ) || 'redirect_zarinpal' !== $_GET['paymentio_action'] ) {
+            return;
+        }
+
+        $order_id  = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+        $order_key = isset( $_GET['order_key'] ) ? sanitize_text_field( wp_unslash( $_GET['order_key'] ) ) : '';
+
+        if ( ! $order_id || empty( $order_key ) ) {
+            wp_safe_redirect( wc_get_checkout_url() );
+            exit;
+        }
+
+        $order = wc_get_order( $order_id );
+        if ( ! $order || $order->get_order_key() !== $order_key ) {
+            wp_safe_redirect( wc_get_checkout_url() );
+            exit;
+        }
+
+        $pay_url = $order->get_meta( '_paymentio_zarinpal_pay_url' );
+        if ( empty( $pay_url ) ) {
+            $authority = $order->get_meta( '_paymentio_zarinpal_authority' );
+            if ( ! empty( $authority ) ) {
+                $pay_url = 'https://payment.zarinpal.com/pg/StartPay/' . $authority;
+            } else {
+                wp_safe_redirect( $order->get_checkout_payment_url() );
+                exit;
+            }
+        }
+
+        // Clean output buffers
+        while ( ob_get_level() > 0 ) {
+            ob_end_clean();
+        }
+
+        if ( ! headers_sent() ) {
+            header( 'Content-Type: text/html; charset=UTF-8' );
+            header( 'Referrer-Policy: unsafe-url' );
+        }
+
+        ?>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="unsafe-url">
+    <title>در حال انتقال به درگاه پرداخت زرین پال</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            direction: rtl;
+        }
+        .paymentio-redirect-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e2e8f0;
+            padding: 40px 32px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .paymentio-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #facc15;
+            border-right-color: #ca8a04;
+            border-radius: 50%;
+            animation: paymentio-spin 0.8s linear infinite;
+            margin: 0 auto 24px auto;
+        }
+        @keyframes paymentio-spin {
+            to { transform: rotate(360deg); }
+        }
+        h2 {
+            color: #0f172a;
+            font-size: 19px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+        p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0 0 28px 0;
+            line-height: 1.6;
+        }
+        .paymentio-btn {
+            display: block;
+            width: 100%;
+            background: #facc15;
+            color: #713f12;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        .paymentio-btn:hover {
+            background: #eab308;
+            color: #422006;
+        }
+    </style>
+</head>
+<body>
+    <div class="paymentio-redirect-card">
+        <div class="paymentio-spinner"></div>
+        <h2>در حال اتصال به درگاه زرین پال</h2>
+        <p>لطفاً چند لحظه صبر کنید، در حال انتقال امن به شبکه پرداخت شاپرک هستید...</p>
+        <form id="paymentio_zarinpal_form" action="<?php echo esc_url( $pay_url ); ?>" method="GET">
+            <button type="submit" class="paymentio-btn">ورود به صفحه پرداخت</button>
+        </form>
+    </div>
+    <script>
+        setTimeout(function() {
+            var form = document.getElementById("paymentio_zarinpal_form");
+            if (form) {
+                form.submit();
+            }
+        }, 80);
+    </script>
+</body>
+</html>
+        <?php
+        exit;
     }
 
     /**
