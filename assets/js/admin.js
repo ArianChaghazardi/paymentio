@@ -3,13 +3,14 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 jQuery(document).ready(function ($) {
     'use strict';
 
     // 1. Quick Toggle Gateway Status
-    $('.paymentio-gw-toggle').on('change', function () {
+    $(document).on('change', '.paymentio-gw-toggle', function () {
         var $toggle = $(this);
         var gatewayId = $toggle.data('gateway');
         var isEnabled = $toggle.is(':checked') ? 1 : 0;
@@ -48,24 +49,28 @@ jQuery(document).ready(function ($) {
     });
 
     // 2. Open / Close Settings Modals
-    $('.paymentio-open-settings').on('click', function () {
-        var targetId = $(this).data('target');
-        $('#' + targetId).fadeIn(200);
+    $(document).on('click', '.paymentio-open-settings, .paymentio-open-modal', function (e) {
+        e.preventDefault();
+        var targetId = $(this).data('target') || $(this).data('modal');
+        if (targetId) {
+            $('#' + targetId).css('display', 'flex').hide().fadeIn(200);
+        }
     });
 
-    $('.paymentio-modal-close').on('click', function () {
+    $(document).on('click', '.paymentio-modal-close', function (e) {
+        e.preventDefault();
         $(this).closest('.paymentio-modal').fadeOut(200);
     });
 
     // Close on background click
-    $('.paymentio-modal').on('click', function (e) {
+    $(document).on('click', '.paymentio-modal', function (e) {
         if ($(e.target).hasClass('paymentio-modal')) {
             $(this).fadeOut(200);
         }
     });
 
     // 3. Save Gateway Settings via AJAX
-    $('.paymentio-gw-form').on('submit', function (e) {
+    $(document).on('submit', '.paymentio-gw-form', function (e) {
         e.preventDefault();
         var $form = $(this);
         var $btn = $form.find('button[type="submit"]');
@@ -106,7 +111,8 @@ jQuery(document).ready(function ($) {
     });
 
     // 4. API Latency Test
-    $('.paymentio-test-api').on('click', function () {
+    $(document).on('click', '.paymentio-test-api', function (e) {
+        e.preventDefault();
         var $btn = $(this);
         var slug = $btn.data('slug');
         var $card = $('#api-test-' + slug);
@@ -135,7 +141,7 @@ jQuery(document).ready(function ($) {
                         alert('پاسخ سرور دریافت شد (زمان: ' + ms + ' میلی ثانیه)');
                     }
                 } else {
-                    var errMsg = res.data.message || 'خطا در برقراری ارتباط';
+                    var errMsg = (res.data && res.data.message) ? res.data.message : 'خطا در برقراری ارتباط';
                     if ($status.length) {
                         $status.html('<span class="status-indicator error">خطا در اتصال: ' + errMsg + '</span>');
                     } else {
@@ -155,7 +161,7 @@ jQuery(document).ready(function ($) {
     });
 
     // 5. Copy RefID on Click
-    $('.paymentio-code').on('click', function () {
+    $(document).on('click', '.paymentio-code', function () {
         var text = $(this).text();
         if (navigator.clipboard) {
             navigator.clipboard.writeText(text).then(function () {
@@ -165,7 +171,7 @@ jQuery(document).ready(function ($) {
     });
 
     // 6. Settings Mode Card selection sync
-    $('.paymentio-mode-card input[type="radio"]').on('change', function () {
+    $(document).on('change', '.paymentio-mode-card input[type="radio"]', function () {
         $('.paymentio-mode-card').removeClass('selected');
         $(this).closest('.paymentio-mode-card').addClass('selected');
     });

@@ -88,9 +88,29 @@ body[class*="paymentio"] #wpfooter {
     direction: rtl;
 }
 
-.paymentio-wrap * {
+.paymentio-wrap *,
+.paymentio-wrap *::before,
+.paymentio-wrap *::after {
     box-sizing: border-box;
-    font-family: inherit;
+}
+
+/* Section Description */
+.paymentio-section-desc {
+    margin-bottom: 22px;
+}
+
+.paymentio-section-desc h3 {
+    margin: 0 0 6px 0;
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--paymentio-slate-900);
+}
+
+.paymentio-section-desc p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13.5px;
+    line-height: 1.6;
 }
 
 /* 4. Header & Brand */
@@ -281,7 +301,7 @@ body[class*="paymentio"] #wpfooter {
     height: 18px;
 }
 
-/* 6. Cards & Grids */
+/* 6. General Cards & Layout Containers */
 .paymentio-card {
     background: #ffffff;
     border-radius: var(--paymentio-radius);
@@ -291,6 +311,7 @@ body[class*="paymentio"] #wpfooter {
     margin-bottom: 24px;
     width: 100%;
     box-sizing: border-box;
+    min-width: 0;
 }
 
 .paymentio-card-header {
@@ -300,18 +321,25 @@ body[class*="paymentio"] #wpfooter {
     border-bottom: 1px solid var(--paymentio-slate-100);
     padding-bottom: 18px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .paymentio-card-header h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 17.5px;
     font-weight: 800;
     color: var(--paymentio-slate-900);
 }
 
+.paymentio-card-body {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .paymentio-grid-2 {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
     width: 100%;
     box-sizing: border-box;
@@ -320,7 +348,7 @@ body[class*="paymentio"] #wpfooter {
 /* 7. Stats Grid */
 .paymentio-stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
     margin-bottom: 24px;
     width: 100%;
@@ -337,6 +365,13 @@ body[class*="paymentio"] #wpfooter {
     gap: 16px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
     box-sizing: border-box;
+    min-width: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.paymentio-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.06);
 }
 
 .paymentio-stat-icon {
@@ -355,11 +390,17 @@ body[class*="paymentio"] #wpfooter {
 .paymentio-stat-icon.danger { background: #fff1f2; color: #e11d48; }
 .paymentio-stat-icon.info { background: #f0fdf4; color: #16a34a; }
 
+.paymentio-stat-data {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
 .paymentio-stat-value {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.15;
     color: var(--paymentio-slate-900);
+    word-break: break-word;
 }
 
 .paymentio-stat-label {
@@ -373,12 +414,19 @@ body[class*="paymentio"] #wpfooter {
     font-size: 11px;
     color: #94a3b8;
     margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* 8. Gateways Grid */
+/* 8. Gateways Grid & Responsive Cards */
+.paymentio-gateways-container {
+    width: 100%;
+}
+
 .paymentio-gateways-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
     margin-bottom: 24px;
     width: 100%;
@@ -389,73 +437,619 @@ body[class*="paymentio"] #wpfooter {
     background: #ffffff;
     border: 2px solid var(--paymentio-slate-200);
     border-radius: var(--paymentio-radius);
-    overflow: hidden;
-    transition: all 0.25s ease;
+    padding: 22px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
     box-sizing: border-box;
+    min-width: 0;
+    position: relative;
 }
 
 .paymentio-gw-card:hover {
     border-color: #38bdf8;
-    box-shadow: 0 8px 20px -6px rgba(14, 165, 233, 0.25);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.2);
 }
 
-.paymentio-gw-card.active {
-    border-color: var(--paymentio-primary);
+.paymentio-gw-card.enabled {
+    border-color: #38bdf8;
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
 }
 
-.paymentio-gw-card-header {
-    padding: 20px;
+.paymentio-gw-card.enabled::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
+    border-radius: var(--paymentio-radius) var(--paymentio-radius) 0 0;
+}
+
+.paymentio-gw-card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--paymentio-slate-100);
-    background: var(--paymentio-slate-50);
+    gap: 14px;
+    margin-bottom: 16px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.paymentio-gw-logo-wrap {
+.paymentio-gw-brand {
     display: flex;
     align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.paymentio-gw-brand h4 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--paymentio-slate-900);
+    line-height: 1.2;
+}
+
+.paymentio-gw-subtitle {
+    display: block;
+    font-size: 11.5px;
+    color: #64748b;
+    margin-top: 3px;
+    font-family: monospace;
+}
+
+/* Gateway Logos Normalization */
+.paymentio-gw-logo {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 6px;
+    border: 1px solid var(--paymentio-slate-200);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    display: block;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.paymentio-gw-description {
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 52px;
+    margin-bottom: 16px;
+}
+
+.paymentio-gw-description p {
+    margin: 0;
+}
+
+.paymentio-gw-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.paymentio-gw-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    background: var(--paymentio-slate-100);
+    color: var(--paymentio-slate-700);
+}
+
+.paymentio-gw-badge.paymentio-badge-active {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.paymentio-gw-badge.paymentio-badge-inactive {
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+.paymentio-gw-badge.paymentio-badge-info {
+    background: #e0f2fe;
+    color: #0284c7;
+    border: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+.paymentio-gw-card-footer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--paymentio-slate-100);
+    padding-top: 18px;
+    margin-top: auto;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.paymentio-gw-card-footer .paymentio-btn {
+    flex: 1 1 auto;
+    white-space: nowrap;
+}
+
+/* 9. Dashboard Components */
+.paymentio-dashboard {
+    width: 100%;
+}
+
+.paymentio-mini-gateways {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.paymentio-mini-gw-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid var(--paymentio-slate-200);
+    border-radius: 12px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
     gap: 12px;
 }
 
-.paymentio-gw-logo {
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-    border-radius: 10px;
+.paymentio-mini-gw-row:hover {
+    background: var(--paymentio-slate-50);
+    border-color: #cbd5e1;
 }
 
-.paymentio-gw-title {
+.paymentio-mini-gw-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.paymentio-mini-gw-info div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.paymentio-mini-gw-info strong {
+    font-size: 14px;
+    color: var(--paymentio-slate-900);
+}
+
+.paymentio-mini-logo {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    object-fit: contain;
+    padding: 4px;
+    border: 1px solid var(--paymentio-slate-200);
+    border-radius: 10px;
+    background: #ffffff;
+    display: block;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.paymentio-pill {
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.paymentio-pill-warning {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.paymentio-features-list {
+    list-style: none;
     margin: 0;
-    font-size: 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.paymentio-features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
+}
+
+.paymentio-features-list li .dashicons {
+    color: var(--paymentio-primary);
+    background: var(--paymentio-primary-light);
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.paymentio-features-list strong {
+    display: block;
+    font-size: 13.5px;
+    color: var(--paymentio-slate-900);
+    margin-bottom: 2px;
+}
+
+.paymentio-features-list p {
+    margin: 0;
+    font-size: 12.5px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* 10. Health & Connectivity Page */
+.paymentio-health-container {
+    width: 100%;
+}
+
+.paymentio-api-test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.paymentio-api-card {
+    border: 1px solid var(--paymentio-slate-200);
+    border-radius: 14px;
+    padding: 20px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    box-sizing: border-box;
+    min-width: 0;
+    transition: all 0.2s ease;
+}
+
+.paymentio-api-card:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 6px 16px -2px rgba(14, 165, 233, 0.15);
+}
+
+.paymentio-api-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.paymentio-api-header img {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    object-fit: contain;
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--paymentio-slate-200);
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    display: block;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.paymentio-api-header strong {
+    display: block;
+    font-size: 15px;
+    color: var(--paymentio-slate-900);
+}
+
+.paymentio-api-header small {
+    display: block;
+    font-size: 11.5px;
+    color: #64748b;
+    margin-top: 2px;
+    font-family: monospace;
+}
+
+.paymentio-api-status {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-indicator.ready {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.status-indicator.success {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-indicator.error {
+    background: #fff1f2;
+    color: #e11d48;
+    border: 1px solid rgba(225, 29, 72, 0.3);
+}
+
+/* 11. Settings Page & Mode Cards */
+.paymentio-settings-container {
+    width: 100%;
+}
+
+.paymentio-settings-section h4 {
+    margin: 0 0 14px 0;
+    font-size: 15.5px;
     font-weight: 800;
     color: var(--paymentio-slate-900);
 }
 
-.paymentio-gw-type {
-    font-size: 11px;
+.paymentio-mode-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.paymentio-mode-card {
+    position: relative;
+    display: block;
+    border: 2px solid var(--paymentio-slate-200);
+    border-radius: var(--paymentio-radius);
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #ffffff;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.paymentio-mode-card:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 6px 16px -2px rgba(14, 165, 233, 0.15);
+}
+
+.paymentio-mode-card.selected {
+    border-color: var(--paymentio-primary);
+    background: #f0f9ff;
+    box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.25);
+}
+
+.paymentio-mode-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.paymentio-mode-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    color: var(--paymentio-slate-900);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.paymentio-mode-header .dashicons {
+    color: var(--paymentio-primary);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.paymentio-mode-content p {
+    margin: 0;
+    font-size: 12.5px;
     color: #64748b;
-    margin-top: 2px;
+    line-height: 1.6;
 }
 
-.paymentio-gw-card-body {
-    padding: 20px;
-    flex-grow: 1;
+/* 12. Transactions & Filters */
+.paymentio-transactions-container {
+    width: 100%;
 }
 
-.paymentio-gw-card-footer {
-    padding: 14px 20px;
-    background: var(--paymentio-slate-50);
-    border-top: 1px solid var(--paymentio-slate-100);
+.paymentio-filter-bar {
+    padding: 20px !important;
+}
+
+.paymentio-filter-form {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* 9. Switches */
+.paymentio-filter-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.paymentio-search-input {
+    min-width: 260px;
+    flex: 1 1 auto;
+}
+
+.paymentio-filter-count {
+    font-size: 13px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.paymentio-filter-count strong {
+    color: var(--paymentio-slate-900);
+}
+
+.paymentio-code {
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.paymentio-code:hover {
+    background: #e0f2fe;
+}
+
+.paymentio-card-pan {
+    font-family: monospace;
+    direction: ltr;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.paymentio-link {
+    color: var(--paymentio-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.paymentio-link:hover {
+    text-decoration: underline;
+}
+
+.paymentio-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px;
+}
+
+.paymentio-pagination .page-numbers {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid var(--paymentio-slate-200);
+    text-decoration: none;
+    color: var(--paymentio-slate-700);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.paymentio-pagination .page-numbers.current {
+    background: var(--paymentio-primary);
+    color: #ffffff;
+    border-color: var(--paymentio-primary);
+}
+
+/* 13. Tables: Responsive Scroll Wrapper */
+.paymentio-table-responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.paymentio-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: right;
+    min-width: 680px;
+    background: #ffffff;
+}
+
+.paymentio-table th {
+    background: var(--paymentio-slate-50);
+    color: var(--paymentio-slate-700);
+    font-weight: 700;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--paymentio-slate-200);
+    white-space: nowrap;
+}
+
+.paymentio-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--paymentio-slate-100);
+    vertical-align: middle;
+}
+
+.paymentio-table tr:hover td {
+    background: #f8fafc;
+}
+
+/* 14. Badges */
+.paymentio-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.paymentio-badge-success { background: #dcfce7; color: #166534; }
+.paymentio-badge-danger { background: #ffe4e6; color: #9f1239; }
+.paymentio-badge-warning { background: #fef3c7; color: #92400e; }
+.paymentio-badge-info { background: #e0f2fe; color: #0369a1; }
+.paymentio-badge-secondary { background: #f1f5f9; color: #64748b; }
+
+/* 15. Switches */
+.paymentio-switch-wrapper {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
 .paymentio-switch {
     position: relative;
     display: inline-block;
@@ -499,16 +1093,16 @@ input:checked + .paymentio-slider:before {
     transform: translateX(22px);
 }
 
-/* 10. Buttons */
+/* 16. Buttons */
 .paymentio-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 44px;
-    padding: 0 22px;
+    height: 42px;
+    padding: 0 20px;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
     border: none;
@@ -528,15 +1122,16 @@ input:checked + .paymentio-slider:before {
     color: #ffffff;
 }
 
-.paymentio-btn-secondary {
-    background: var(--paymentio-slate-100);
+.paymentio-btn-outline {
+    background: transparent;
     color: var(--paymentio-slate-700);
     border: 1px solid var(--paymentio-slate-200);
 }
 
-.paymentio-btn-secondary:hover {
-    background: #e2e8f0;
+.paymentio-btn-outline:hover {
+    background: #f1f5f9;
     color: var(--paymentio-slate-900);
+    border-color: #cbd5e1;
 }
 
 .paymentio-btn-sm {
@@ -546,18 +1141,14 @@ input:checked + .paymentio-slider:before {
     border-radius: 8px;
 }
 
-.paymentio-btn-ghost {
-    background: transparent;
-    border: 1px solid currentColor;
-}
-
-/* 11. Form Elements */
+/* 17. Form Elements */
 .paymentio-form-group {
     margin-bottom: 20px;
     width: 100%;
+    box-sizing: border-box;
 }
 
-.paymentio-label {
+.paymentio-form-group label {
     display: block;
     font-size: 13.5px;
     font-weight: 700;
@@ -565,105 +1156,81 @@ input:checked + .paymentio-slider:before {
     margin-bottom: 8px;
 }
 
+.paymentio-form-group label .required {
+    color: #e11d48;
+}
+
 .paymentio-input,
 .paymentio-select,
-.paymentio-textarea {
+.paymentio-textarea,
+select.paymentio-input,
+textarea.paymentio-input {
     width: 100% !important;
     max-width: 100% !important;
-    height: 44px;
+    height: 42px;
     padding: 0 14px;
     border: 1px solid var(--paymentio-slate-200);
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     background: var(--paymentio-slate-50);
     color: var(--paymentio-slate-900);
     transition: all 0.2s ease;
     box-sizing: border-box !important;
 }
 
-.paymentio-textarea {
+textarea.paymentio-input {
     height: auto;
     padding: 12px 14px;
 }
 
 .paymentio-input:focus,
 .paymentio-select:focus,
-.paymentio-textarea:focus {
+.paymentio-textarea:focus,
+select.paymentio-input:focus,
+textarea.paymentio-input:focus {
     outline: none;
     border-color: var(--paymentio-primary);
     background: #ffffff;
     box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
 }
 
-.paymentio-hint {
+.paymentio-form-group small {
+    display: block;
     font-size: 11.5px;
     color: #64748b;
     margin-top: 6px;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
-/* 12. Tables */
-.paymentio-table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    border-radius: 10px;
+.paymentio-checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.paymentio-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    text-align: right;
-    min-width: 680px;
+.paymentio-checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--paymentio-slate-200);
+    cursor: pointer;
+    margin: 0;
 }
 
-.paymentio-table th {
-    background: var(--paymentio-slate-50);
-    color: var(--paymentio-slate-700);
-    font-weight: 700;
-    padding: 14px;
-    border-bottom: 2px solid var(--paymentio-slate-200);
-    white-space: nowrap;
-}
-
-.paymentio-table td {
-    padding: 14px;
-    border-bottom: 1px solid var(--paymentio-slate-100);
-    vertical-align: middle;
-}
-
-.paymentio-table tr:hover td {
-    background: #fafafa;
-}
-
-/* 13. Badges */
-.paymentio-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    background: #f1f5f9;
-    color: #475569;
-}
-
-.paymentio-badge.success { background: #dcfce7; color: #166534; }
-.paymentio-badge.failed { background: #ffe4e6; color: #9f1239; }
-.paymentio-badge.pending { background: #fef3c7; color: #92400e; }
-.paymentio-badge.info { background: #e0f2fe; color: #0369a1; }
-
-/* 14. Modals */
+/* 18. Modals */
 .paymentio-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(4px);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 999999;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .paymentio-modal.open {
@@ -680,6 +1247,7 @@ input:checked + .paymentio-slider:before {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .paymentio-modal-header {
@@ -694,19 +1262,28 @@ input:checked + .paymentio-slider:before {
     margin: 0;
     font-size: 17px;
     font-weight: 800;
+    color: var(--paymentio-slate-900);
 }
 
 .paymentio-modal-close {
     background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
+    line-height: 1;
     color: #94a3b8;
+    padding: 0;
+    margin: 0;
+}
+
+.paymentio-modal-close:hover {
+    color: var(--paymentio-slate-900);
 }
 
 .paymentio-modal-body {
     padding: 24px;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .paymentio-modal-footer {
@@ -716,9 +1293,10 @@ input:checked + .paymentio-slider:before {
     justify-content: flex-end;
     gap: 12px;
     background: var(--paymentio-slate-50);
+    box-sizing: border-box;
 }
 
-/* 15. Footer */
+/* 19. Footer */
 .paymentio-footer {
     text-align: center;
     color: #94a3b8;
@@ -732,13 +1310,16 @@ input:checked + .paymentio-slider:before {
     font-weight: 700;
 }
 
-/* 16. Responsive Media Queries */
+/* 20. Comprehensive Responsive Architecture */
 @media (max-width: 1200px) {
-    .paymentio-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
     .paymentio-gateways-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .paymentio-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .paymentio-api-test-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -747,6 +1328,9 @@ input:checked + .paymentio-slider:before {
         padding: 20px 20px 70px 20px !important;
     }
     .paymentio-grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .paymentio-mode-options {
         grid-template-columns: 1fr;
     }
 }
@@ -826,7 +1410,7 @@ input:checked + .paymentio-slider:before {
 
     /* Stats 2x2 Clean Grid on Mobile */
     .paymentio-stats-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 10px !important;
         margin-bottom: 16px !important;
     }
@@ -873,7 +1457,60 @@ input:checked + .paymentio-slider:before {
         flex-shrink: 0 !important;
     }
 
-    /* Cards & Gateways Grid on Mobile */
+    /* Gateways Grid on Mobile: Single Column */
+    .paymentio-gateways-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .paymentio-gw-card {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .paymentio-gw-card-footer {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+
+    .paymentio-gw-card-footer .paymentio-btn {
+        width: 100% !important;
+    }
+
+    /* API Tests Grid on Mobile */
+    .paymentio-api-test-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .paymentio-api-card {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Filter Form on Mobile */
+    .paymentio-filter-bar {
+        padding: 16px 14px !important;
+    }
+
+    .paymentio-filter-form {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .paymentio-filter-inputs {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+    }
+
+    .paymentio-filter-inputs .paymentio-input,
+    .paymentio-filter-inputs .paymentio-btn {
+        width: 100% !important;
+    }
+
+    /* Cards */
     .paymentio-card {
         padding: 16px 14px !important;
         border-radius: 12px !important;
@@ -887,20 +1524,6 @@ input:checked + .paymentio-slider:before {
         margin-bottom: 14px !important;
     }
 
-    .paymentio-gateways-grid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-    }
-
-    .paymentio-gw-card-footer {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-
-    .paymentio-gw-card-footer .paymentio-btn {
-        width: 100% !important;
-    }
-
     /* Modals on Mobile */
     .paymentio-modal {
         padding: 10px !important;
@@ -909,6 +1532,7 @@ input:checked + .paymentio-slider:before {
     .paymentio-modal-dialog {
         width: 100% !important;
         max-height: 92vh !important;
+        border-radius: 12px !important;
     }
 
     .paymentio-modal-body {
@@ -918,6 +1542,7 @@ input:checked + .paymentio-slider:before {
     .paymentio-modal-footer {
         flex-direction: column-reverse !important;
         gap: 8px !important;
+        padding: 14px 16px !important;
     }
 
     .paymentio-modal-footer .paymentio-btn {
