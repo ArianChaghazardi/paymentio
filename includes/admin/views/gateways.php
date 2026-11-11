@@ -4,6 +4,7 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -89,33 +90,31 @@ $gateways_data = array(
                     </div>
                 </div>
 
-                <div class="paymentio-gw-card-body">
-                    <p class="paymentio-gw-description"><?php echo esc_html( $gw['desc'] ); ?></p>
+                <div class="paymentio-gw-description">
+                    <p><?php echo esc_html( $gw['desc'] ); ?></p>
+                </div>
 
-                    <div class="paymentio-gw-badges">
-                        <?php if ( $is_enabled ) : ?>
-                            <span class="paymentio-badge paymentio-badge-success">فعال در تسویه حساب</span>
-                        <?php else : ?>
-                            <span class="paymentio-badge paymentio-badge-secondary">غیرفعال</span>
-                        <?php endif; ?>
+                <div class="paymentio-gw-badges">
+                    <span class="paymentio-gw-badge <?php echo $is_enabled ? 'paymentio-badge-active' : 'paymentio-badge-inactive'; ?>">
+                        <?php echo $is_enabled ? 'فعال در فروشگاه' : 'غیرفعال'; ?>
+                    </span>
 
-                        <?php if ( $gw['has_sandbox'] && $is_sandbox ) : ?>
-                            <span class="paymentio-badge paymentio-badge-warning">محیط آزمایشی (سندباکس)</span>
-                        <?php endif; ?>
+                    <?php if ( $gw['has_sandbox'] && $is_sandbox ) : ?>
+                        <span class="paymentio-pill paymentio-pill-warning">حالت سندباکس</span>
+                    <?php endif; ?>
 
-                        <?php if ( $gw['has_direct'] && $is_direct ) : ?>
-                            <span class="paymentio-badge paymentio-badge-info">درگاه اختصاصی مستقیم</span>
-                        <?php endif; ?>
-                    </div>
+                    <?php if ( $gw['has_direct'] && $is_direct ) : ?>
+                        <span class="paymentio-badge paymentio-badge-info">درگاه اختصاصی مستقیم</span>
+                    <?php endif; ?>
                 </div>
 
                 <div class="paymentio-gw-card-footer">
                     <button type="button" class="paymentio-btn paymentio-btn-sm paymentio-btn-primary paymentio-open-settings" data-target="modal-<?php echo esc_attr( $gw['slug'] ); ?>">
-                        <span class="dashicons dashicons-admin-generic"></span>
+                        <?php echo Paymentio_Helper::icon( 'settings', 15 ); ?>
                         پیکربندی تنظیمات
                     </button>
                     <button type="button" class="paymentio-btn paymentio-btn-sm paymentio-btn-outline paymentio-test-api" data-slug="<?php echo esc_attr( $gw['slug'] ); ?>">
-                        <span class="dashicons dashicons-update"></span>
+                        <?php echo Paymentio_Helper::icon( 'refresh', 15 ); ?>
                         تست اتصال
                     </button>
                 </div>
@@ -176,7 +175,10 @@ $gateways_data = array(
                         </div>
 
                         <div class="paymentio-modal-footer">
-                            <button type="submit" class="paymentio-btn paymentio-btn-primary">ذخیره تغییرات</button>
+                            <button type="submit" class="paymentio-btn paymentio-btn-primary">
+                                <?php echo Paymentio_Helper::icon( 'check', 16 ); ?>
+                                ذخیره تغییرات
+                            </button>
                             <button type="button" class="paymentio-btn paymentio-btn-outline paymentio-modal-close">بستن</button>
                         </div>
                     </form>

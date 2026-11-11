@@ -4,6 +4,7 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +31,10 @@ $max_exec_time     = ini_get( 'max_execution_time' );
     <div class="paymentio-card">
         <div class="paymentio-card-header">
             <h3>تست اتصال به وب سرویس های پرداخت یار</h3>
-            <span class="paymentio-badge paymentio-badge-info">آزمایش زنده</span>
+            <span class="paymentio-badge paymentio-badge-info">
+                <?php echo Paymentio_Helper::icon( 'activity', 14 ); ?>
+                آزمایش زنده
+            </span>
         </div>
         <div class="paymentio-card-body">
             <div class="paymentio-api-test-grid">
@@ -47,6 +51,7 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                         <span class="status-indicator ready">در انتظار تست</span>
                     </div>
                     <button type="button" class="paymentio-btn paymentio-btn-sm paymentio-btn-outline paymentio-test-api" data-slug="zarinpal">
+                        <?php echo Paymentio_Helper::icon( 'refresh', 14 ); ?>
                         بررسی پینگ
                     </button>
                 </div>
@@ -64,6 +69,7 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                         <span class="status-indicator ready">در انتظار تست</span>
                     </div>
                     <button type="button" class="paymentio-btn paymentio-btn-sm paymentio-btn-outline paymentio-test-api" data-slug="zibal">
+                        <?php echo Paymentio_Helper::icon( 'refresh', 14 ); ?>
                         بررسی پینگ
                     </button>
                 </div>
@@ -81,6 +87,7 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                         <span class="status-indicator ready">در انتظار تست</span>
                     </div>
                     <button type="button" class="paymentio-btn paymentio-btn-sm paymentio-btn-outline paymentio-test-api" data-slug="payping">
+                        <?php echo Paymentio_Helper::icon( 'refresh', 14 ); ?>
                         بررسی پینگ
                     </button>
                 </div>
@@ -101,9 +108,15 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                         <td style="width: 250px;"><strong>نسخه PHP سرور</strong></td>
                         <td>
                             <?php if ( version_compare( $php_version, '7.4', '>=' ) ) : ?>
-                                <span class="paymentio-badge paymentio-badge-success"><?php echo esc_html( $php_version ); ?> (پشتیبانی می شود)</span>
+                                <span class="paymentio-badge paymentio-badge-success">
+                                    <?php echo Paymentio_Helper::icon( 'check-simple', 12 ); ?>
+                                    <?php echo esc_html( $php_version ); ?> (پشتیبانی می شود)
+                                </span>
                             <?php else : ?>
-                                <span class="paymentio-badge paymentio-badge-danger"><?php echo esc_html( $php_version ); ?> (نیاز به ارتقا به حداقل ۷.۴)</span>
+                                <span class="paymentio-badge paymentio-badge-danger">
+                                    <?php echo Paymentio_Helper::icon( 'dismiss', 12 ); ?>
+                                    <?php echo esc_html( $php_version ); ?> (نیاز به ارتقا به حداقل ۷.۴)
+                                </span>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -112,9 +125,15 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                         <td><strong>ماژول شبکه cURL</strong></td>
                         <td>
                             <?php if ( $curl_installed ) : ?>
-                                <span class="paymentio-badge paymentio-badge-success">فعال - نسخه <?php echo esc_html( $curl_version_info['version'] ?? '' ); ?></span>
+                                <span class="paymentio-badge paymentio-badge-success">
+                                    <?php echo Paymentio_Helper::icon( 'check-simple', 12 ); ?>
+                                    فعال - نسخه <?php echo esc_html( $curl_version_info['version'] ?? '' ); ?>
+                                </span>
                             <?php else : ?>
-                                <span class="paymentio-badge paymentio-badge-danger">غیرفعال (برای اتصال به بانک ضروری است)</span>
+                                <span class="paymentio-badge paymentio-badge-danger">
+                                    <?php echo Paymentio_Helper::icon( 'dismiss', 12 ); ?>
+                                    غیرفعال (برای اتصال به بانک ضروری است)
+                                </span>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -123,9 +142,15 @@ $max_exec_time     = ini_get( 'max_execution_time' );
                         <td><strong>ماژول امنیتی OpenSSL</strong></td>
                         <td>
                             <?php if ( $openssl_installed ) : ?>
-                                <span class="paymentio-badge paymentio-badge-success">فعال و آماده اتصالات SSL/TLS</span>
+                                <span class="paymentio-badge paymentio-badge-success">
+                                    <?php echo Paymentio_Helper::icon( 'check-simple', 12 ); ?>
+                                    فعال و آماده اتصالات SSL/TLS
+                                </span>
                             <?php else : ?>
-                                <span class="paymentio-badge paymentio-badge-danger">غیرفعال</span>
+                                <span class="paymentio-badge paymentio-badge-danger">
+                                    <?php echo Paymentio_Helper::icon( 'dismiss', 12 ); ?>
+                                    غیرفعال
+                                </span>
                             <?php endif; ?>
                         </td>
                     </tr>

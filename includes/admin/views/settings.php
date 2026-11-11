@@ -4,6 +4,7 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,8 +60,8 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
 
     <?php if ( $notice ) : ?>
         <div class="paymentio-alert paymentio-alert-success">
-            <span class="dashicons dashicons-yes"></span>
-            <?php echo esc_html( $notice ); ?>
+            <?php echo Paymentio_Helper::icon( 'success', 18 ); ?>
+            <span><?php echo esc_html( $notice ); ?></span>
         </div>
     <?php endif; ?>
 
@@ -78,7 +79,7 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
                         <input type="radio" name="store_currency" value="IRT" <?php checked( $current_currency, 'IRT' ); ?> />
                         <div class="paymentio-mode-content">
                             <div class="paymentio-mode-header">
-                                <span class="dashicons dashicons-money-alt"></span>
+                                <?php echo Paymentio_Helper::icon( 'money', 20 ); ?>
                                 <strong>تومان (پیش فرض پیشنهادی)</strong>
                             </div>
                             <p>تمامی قیمت های محصولات و صورتحساب به تومان نمایش داده شده و مبالغ درگاه ها بر پایه تومان پردازش می شوند.</p>
@@ -89,7 +90,7 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
                         <input type="radio" name="store_currency" value="IRR" <?php checked( $current_currency, 'IRR' ); ?> />
                         <div class="paymentio-mode-content">
                             <div class="paymentio-mode-header">
-                                <span class="dashicons dashicons-cart"></span>
+                                <?php echo Paymentio_Helper::icon( 'cart', 20 ); ?>
                                 <strong>ریال</strong>
                             </div>
                             <p>قیمت های فروشگاه به ریال نمایش داده می شوند.</p>
@@ -108,7 +109,7 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
                         <input type="radio" name="display_mode" value="separate" <?php checked( $current_mode, 'separate' ); ?> />
                         <div class="paymentio-mode-content">
                             <div class="paymentio-mode-header">
-                                <span class="dashicons dashicons-list-view"></span>
+                                <?php echo Paymentio_Helper::icon( 'list', 20 ); ?>
                                 <strong>نمایش درگاه های مجزا (پیش فرض)</strong>
                             </div>
                             <p>هر یک از درگاه های فعال (زرین پال، زیبال، پی پینگ) به عنوان یک گزینه جداگانه در فرم تسویه حساب ووکامرس نمایش داده می شوند.</p>
@@ -119,7 +120,7 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
                         <input type="radio" name="display_mode" value="unified" <?php checked( $current_mode, 'unified' ); ?> />
                         <div class="paymentio-mode-content">
                             <div class="paymentio-mode-header">
-                                <span class="dashicons dashicons-randomize"></span>
+                                <?php echo Paymentio_Helper::icon( 'route', 20 ); ?>
                                 <strong>تک درگاه یکپارچه هوشمند (پیشنهادی)</strong>
                             </div>
                             <p>تمام درگاه ها در قالب یک درگاه واحد و شیک ادغام می شوند و کاربر می تواند از بین نشان های گرافیکی درگاه ها انتخاب کند یا به درگاه پیش فرض برود.</p>
@@ -165,6 +166,7 @@ $current_desc       = $unified_settings['description'] ?? 'پرداخت با ک�
 
             <div class="paymentio-form-actions" style="margin-top: 24px;">
                 <button type="submit" name="paymentio_save_general_settings" class="paymentio-btn paymentio-btn-primary">
+                    <?php echo Paymentio_Helper::icon( 'check', 16 ); ?>
                     ذخیره تنظیمات
                 </button>
             </div>

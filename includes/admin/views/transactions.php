@@ -4,6 +4,7 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -58,7 +59,10 @@ $total_pages  = ceil( $total_items / $per_page );
                     <option value="payping" <?php selected( $gateway, 'payping' ); ?>>پی پینگ</option>
                 </select>
 
-                <button type="submit" class="paymentio-btn paymentio-btn-primary">اعمال فیلتر</button>
+                <button type="submit" class="paymentio-btn paymentio-btn-primary">
+                    <?php echo Paymentio_Helper::icon( 'search', 14 ); ?>
+                    اعمال فیلتر
+                </button>
                 <?php if ( $status || $gateway || $search ) : ?>
                     <a href="<?php echo esc_url( admin_url( 'admin.php?page=paymentio-transactions' ) ); ?>" class="paymentio-btn paymentio-btn-outline">پاکسازی فیلتر</a>
                 <?php endif; ?>
@@ -75,8 +79,8 @@ $total_pages  = ceil( $total_items / $per_page );
         <div class="paymentio-card-body" style="padding: 0;">
             <?php if ( empty( $transactions ) ) : ?>
                 <div style="padding: 40px; text-align: center; color: #94a3b8;">
-                    <span class="dashicons dashicons-search" style="font-size: 36px; width: 36px; height: 36px;"></span>
-                    <p>هیچ تراکنشی با مشخصات وارد شده یافت نشد.</p>
+                    <?php echo Paymentio_Helper::icon( 'search', 36 ); ?>
+                    <p style="margin-top: 12px;">هیچ تراکنشی با مشخصات وارد شده یافت نشد.</p>
                 </div>
             <?php else : ?>
                 <div class="paymentio-table-responsive">

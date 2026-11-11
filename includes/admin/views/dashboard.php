@@ -4,6 +4,7 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,46 +22,46 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
     <!-- Stat Cards -->
     <div class="paymentio-stats-grid">
         <div class="paymentio-stat-card">
-            <div class="paymentio-stat-icon success">
-                <span class="dashicons dashicons-yes-alt"></span>
-            </div>
             <div class="paymentio-stat-data">
                 <div class="paymentio-stat-label">تراکنش های موفق</div>
                 <div class="paymentio-stat-value"><?php echo esc_html( Paymentio_Helper::to_persian_digits( $stats['success_count'] ) ); ?></div>
                 <div class="paymentio-stat-hint">پرداخت های انجام شده</div>
             </div>
+            <div class="paymentio-stat-icon success">
+                <?php echo Paymentio_Helper::icon( 'success', 22 ); ?>
+            </div>
         </div>
 
         <div class="paymentio-stat-card">
-            <div class="paymentio-stat-icon primary">
-                <span class="dashicons dashicons-money-alt"></span>
-            </div>
             <div class="paymentio-stat-data">
                 <div class="paymentio-stat-label">مجموع فروش موفق</div>
                 <div class="paymentio-stat-value"><?php echo esc_html( Paymentio_Helper::format_price( $stats['total_amount'], 'IRT' ) ); ?></div>
                 <div class="paymentio-stat-hint">گردش مالی تایید شده</div>
             </div>
+            <div class="paymentio-stat-icon primary">
+                <?php echo Paymentio_Helper::icon( 'money', 22 ); ?>
+            </div>
         </div>
 
         <div class="paymentio-stat-card">
-            <div class="paymentio-stat-icon danger">
-                <span class="dashicons dashicons-dismiss"></span>
-            </div>
             <div class="paymentio-stat-data">
                 <div class="paymentio-stat-label">تراکنش های ناموفق</div>
                 <div class="paymentio-stat-value"><?php echo esc_html( Paymentio_Helper::to_persian_digits( $stats['failed_count'] ) ); ?></div>
                 <div class="paymentio-stat-hint">لغو شده یا خطای بانکی</div>
             </div>
+            <div class="paymentio-stat-icon danger">
+                <?php echo Paymentio_Helper::icon( 'dismiss', 22 ); ?>
+            </div>
         </div>
 
         <div class="paymentio-stat-card">
-            <div class="paymentio-stat-icon info">
-                <span class="dashicons dashicons-shield"></span>
-            </div>
             <div class="paymentio-stat-data">
                 <div class="paymentio-stat-label">درگاه های فعال</div>
                 <div class="paymentio-stat-value"><?php echo esc_html( Paymentio_Helper::to_persian_digits( $gateways_count ) ); ?> <span style="font-size:14px; font-weight:normal; color:#94a3b8;">/ ۳</span></div>
                 <div class="paymentio-stat-hint"><?php echo ( 'unified' === $mode ) ? 'حالت تک درگاه هوشمند' : 'حالت درگاه های مجزا'; ?></div>
+            </div>
+            <div class="paymentio-stat-icon info">
+                <?php echo Paymentio_Helper::icon( 'shield', 22 ); ?>
             </div>
         </div>
     </div>
@@ -71,7 +72,10 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
         <div class="paymentio-card">
             <div class="paymentio-card-header">
                 <h3>وضعیت درگاه های پرداخت</h3>
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=paymentio-gateways' ) ); ?>" class="paymentio-btn paymentio-btn-sm paymentio-btn-outline">مدیریت درگاه ها</a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=paymentio-gateways' ) ); ?>" class="paymentio-btn paymentio-btn-sm paymentio-btn-outline">
+                    <?php echo Paymentio_Helper::icon( 'gateways', 15 ); ?>
+                    مدیریت درگاه ها
+                </a>
             </div>
             <div class="paymentio-card-body">
                 <div class="paymentio-mini-gateways">
@@ -113,26 +117,41 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
         <!-- Quick Info & Tips -->
         <div class="paymentio-card">
             <div class="paymentio-card-header">
-                <h3>ویژگی های هوشمند پیمنتیو</h3>
+                <h3>ویژگی های اختصاصی پیمنتیو</h3>
             </div>
             <div class="paymentio-card-body">
-                <ul class="paymentio-feature-list">
+                <ul class="paymentio-features-list">
                     <li>
-                        <span class="dashicons dashicons-randomize"></span>
+                        <span class="paymentio-feature-icon">
+                            <?php echo Paymentio_Helper::icon( 'layers', 18 ); ?>
+                        </span>
                         <div>
-                            <strong>هدایت هوشمند و خودکار (Smart Failover)</strong>
-                            <p>در صورتی که یک درگاه موقتاً با کندی یا اختلال مواجه شود، سیستم به طور خودکار کاربر را به درگاه جایگزین هدایت می کند.</p>
+                            <strong>پشتیبانی همزمان از چند درگاه پرداخت</strong>
+                            <p>اتصال بدون اختلال به درگاه های معتبر زرین پال، زیبال و پی پینگ با قابلیت تفکیک کامل تراکنش ها.</p>
                         </div>
                     </li>
                     <li>
-                        <span class="dashicons dashicons-admin-settings"></span>
+                        <span class="paymentio-feature-icon">
+                            <?php echo Paymentio_Helper::icon( 'route', 18 ); ?>
+                        </span>
+                        <div>
+                            <strong>سیستم هدایت خودکار در صورت قطعی (Failover)</strong>
+                            <p>چنانچه وب سرویس درگاه انتخابی با اختلال بانکی روبرو شود، سیستم به صورت هوشمند کاربر را به درگاه جایگزین هدایت می کند.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="paymentio-feature-icon">
+                            <?php echo Paymentio_Helper::icon( 'sliders', 18 ); ?>
+                        </span>
                         <div>
                             <strong>انعطاف پذیری در تسویه حساب</strong>
                             <p>امکان نمایش درگاه ها به صورت تک تک و مجزا، یا به صورت یک درگاه واحد با استایل مدرن در برگه تسویه حساب.</p>
                         </div>
                     </li>
                     <li>
-                        <span class="dashicons dashicons-database"></span>
+                        <span class="paymentio-feature-icon">
+                            <?php echo Paymentio_Helper::icon( 'database', 18 ); ?>
+                        </span>
                         <div>
                             <strong>ثبت دقیق و مستقل تراکنش ها</strong>
                             <p>ذخیره سازی کلیه جزییات پرداخت شامل کد پیگیری، شماره کارت، آی پی کاربر و تاریخ در جدول اختصاصی دیتابیس.</p>
@@ -147,13 +166,16 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
     <div class="paymentio-card" style="margin-top: 24px;">
         <div class="paymentio-card-header">
             <h3>آخرین تراکنش ها</h3>
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=paymentio-transactions' ) ); ?>" class="paymentio-btn paymentio-btn-sm paymentio-btn-primary">مشاهده تمام تراکنش ها</a>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=paymentio-transactions' ) ); ?>" class="paymentio-btn paymentio-btn-sm paymentio-btn-primary">
+                <?php echo Paymentio_Helper::icon( 'transactions', 15 ); ?>
+                مشاهده تمام تراکنش ها
+            </a>
         </div>
         <div class="paymentio-card-body" style="padding: 0;">
             <?php if ( empty( $recent_tx['items'] ) ) : ?>
                 <div style="padding: 30px; text-align: center; color: #94a3b8;">
-                    <span class="dashicons dashicons-info-outline" style="font-size: 32px; width: 32px; height: 32px;"></span>
-                    <p>هنوز تراکنشی در سیستم ثبت نشده است.</p>
+                    <?php echo Paymentio_Helper::icon( 'info', 32 ); ?>
+                    <p style="margin-top: 10px;">هنوز تراکنشی در سیستم ثبت نشده است.</p>
                 </div>
             <?php else : ?>
                 <div class="paymentio-table-responsive">

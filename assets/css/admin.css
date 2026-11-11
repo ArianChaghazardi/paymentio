@@ -295,10 +295,16 @@ body[class*="paymentio"] #wpfooter {
     font-weight: 800;
 }
 
-.paymentio-nav-item .dashicons {
-    font-size: 18px;
+.paymentio-nav-icon,
+.paymentio-nav-item svg {
     width: 18px;
     height: 18px;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    stroke: currentColor;
+    flex-shrink: 0;
 }
 
 /* 6. General Cards & Layout Containers */
@@ -362,6 +368,7 @@ body[class*="paymentio"] #wpfooter {
     padding: 20px 22px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
     box-sizing: border-box;
@@ -382,7 +389,13 @@ body[class*="paymentio"] #wpfooter {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 22px;
+}
+
+.paymentio-stat-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    display: block;
 }
 
 .paymentio-stat-icon.primary { background: #e0f2fe; color: #0284c7; }
@@ -680,18 +693,23 @@ body[class*="paymentio"] #wpfooter {
     margin: 0;
 }
 
-.paymentio-features-list li .dashicons {
+.paymentio-features-list li .paymentio-feature-icon {
     color: var(--paymentio-primary);
     background: var(--paymentio-primary-light);
-    border-radius: 8px;
-    padding: 6px;
-    font-size: 18px;
-    width: 32px;
-    height: 32px;
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+.paymentio-features-list li .paymentio-feature-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    display: block;
 }
 
 .paymentio-features-list strong {
@@ -873,11 +891,13 @@ body[class*="paymentio"] #wpfooter {
     font-weight: 800;
 }
 
-.paymentio-mode-header .dashicons {
+.paymentio-mode-header svg {
     color: var(--paymentio-primary);
-    font-size: 20px;
+    stroke: var(--paymentio-primary);
     width: 20px;
     height: 20px;
+    margin-left: 8px;
+    flex-shrink: 0;
 }
 
 .paymentio-mode-content p {
@@ -1109,6 +1129,43 @@ input:checked + .paymentio-slider:before {
     transition: all 0.2s ease;
     text-decoration: none;
     box-sizing: border-box;
+}
+
+.paymentio-btn svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+.paymentio-badge svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    margin-left: 4px;
+    flex-shrink: 0;
+}
+
+.paymentio-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.paymentio-alert-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.paymentio-alert-success svg {
+    stroke: #059669;
+    flex-shrink: 0;
 }
 
 .paymentio-btn-primary {
@@ -1428,6 +1485,11 @@ textarea.paymentio-input:focus {
         border-radius: 8px !important;
     }
 
+    .paymentio-stat-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
     .paymentio-stat-value {
         font-size: 17px !important;
     }
@@ -1565,6 +1627,11 @@ textarea.paymentio-input:focus {
         width: 32px !important;
         height: 32px !important;
         font-size: 16px !important;
+    }
+
+    .paymentio-stat-icon svg {
+        width: 16px !important;
+        height: 16px !important;
     }
 
     .paymentio-stat-value {

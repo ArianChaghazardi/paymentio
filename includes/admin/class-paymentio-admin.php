@@ -4,6 +4,7 @@
  *
  * @package Paymentio
  * @author Arian Chaghazardi
+ * @developer HectorTM
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -178,11 +179,11 @@ class Paymentio_Admin {
      */
     private function render_header( $active_tab ) {
         $tabs = array(
-            'dashboard'    => array( 'title' => 'پیشخوان', 'url' => admin_url( 'admin.php?page=paymentio' ), 'icon' => 'dashicons-dashboard' ),
-            'gateways'     => array( 'title' => 'درگاه های پرداخت', 'url' => admin_url( 'admin.php?page=paymentio-gateways' ), 'icon' => 'dashicons-cart' ),
-            'transactions' => array( 'title' => 'تراکنش ها', 'url' => admin_url( 'admin.php?page=paymentio-transactions' ), 'icon' => 'dashicons-list-view' ),
-            'settings'     => array( 'title' => 'تنظیمات عمومی', 'url' => admin_url( 'admin.php?page=paymentio-settings' ), 'icon' => 'dashicons-admin-generic' ),
-            'health'       => array( 'title' => 'وضعیت سیستم و تست اتصال', 'url' => admin_url( 'admin.php?page=paymentio-health' ), 'icon' => 'dashicons-heart' ),
+            'dashboard'    => array( 'title' => 'پیشخوان', 'url' => admin_url( 'admin.php?page=paymentio' ), 'icon' => 'dashboard' ),
+            'gateways'     => array( 'title' => 'درگاه های پرداخت', 'url' => admin_url( 'admin.php?page=paymentio-gateways' ), 'icon' => 'gateways' ),
+            'transactions' => array( 'title' => 'تراکنش ها', 'url' => admin_url( 'admin.php?page=paymentio-transactions' ), 'icon' => 'transactions' ),
+            'settings'     => array( 'title' => 'تنظیمات عمومی', 'url' => admin_url( 'admin.php?page=paymentio-settings' ), 'icon' => 'settings' ),
+            'health'       => array( 'title' => 'وضعیت سیستم و تست اتصال', 'url' => admin_url( 'admin.php?page=paymentio-health' ), 'icon' => 'health' ),
         );
         ?>
         <header class="paymentio-header">
@@ -222,7 +223,7 @@ class Paymentio_Admin {
             <nav class="paymentio-nav">
                 <?php foreach ( $tabs as $id => $tab ) : ?>
                     <a href="<?php echo esc_url( $tab['url'] ); ?>" class="paymentio-nav-item <?php echo $active_tab === $id ? 'active' : ''; ?>">
-                        <span class="dashicons <?php echo esc_attr( $tab['icon'] ); ?>"></span>
+                        <?php echo Paymentio_Helper::icon( $tab['icon'], 18, 'paymentio-nav-icon' ); ?>
                         <?php echo esc_html( $tab['title'] ); ?>
                     </a>
                 <?php endforeach; ?>
