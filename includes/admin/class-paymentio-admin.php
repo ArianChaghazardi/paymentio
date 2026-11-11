@@ -185,18 +185,37 @@ class Paymentio_Admin {
             'health'       => array( 'title' => 'وضعیت سیستم و تست اتصال', 'url' => admin_url( 'admin.php?page=paymentio-health' ), 'icon' => 'dashicons-heart' ),
         );
         ?>
-        <div class="paymentio-header">
-            <div class="paymentio-header-top">
+        <header class="paymentio-header">
+            <div class="paymentio-header-inner">
                 <div class="paymentio-brand">
-                    <div class="paymentio-logo-badge">P</div>
+                    <div class="paymentio-logo-badge">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                        </svg>
+                    </div>
                     <div>
-                        <h1 class="paymentio-title">پیمنتیو <span>Paymentio</span></h1>
+                        <div class="paymentio-title-row">
+                            <h1 class="paymentio-title">پیمنتیو</h1>
+                            <span class="paymentio-version-tag">نسخه <?php echo esc_html( PAYMENTIO_VERSION ); ?></span>
+                            <span class="paymentio-status-pill paymentio-status-online">
+                                <span class="paymentio-pulse"></span>
+                                سیستم آماده به کار
+                            </span>
+                        </div>
                         <p class="paymentio-subtitle">مدیریت یکپارچه و هوشمند درگاه های پرداخت ووکامرس</p>
                     </div>
                 </div>
-                <div class="paymentio-author-badge">
-                    <span>توسعه دهنده: <strong>آرین چقازردی</strong> در <strong>هکتورتیم</strong></span>
-                    <a href="https://hectortm.ir" target="_blank" class="paymentio-link">hectortm.ir</a>
+
+                <div class="paymentio-author-badges">
+                    <a href="https://arianchaghazardi.ir" target="_blank" class="paymentio-chip">
+                        <span class="paymentio-chip-label">توسعه دهنده:</span>
+                        <span class="paymentio-chip-val">آرین چقازردی</span>
+                    </a>
+                    <a href="https://hectortm.ir" target="_blank" class="paymentio-chip paymentio-chip-brand">
+                        <span class="paymentio-chip-label">محصول:</span>
+                        <span class="paymentio-chip-val">هکتورتیم</span>
+                    </a>
                 </div>
             </div>
 
@@ -208,7 +227,7 @@ class Paymentio_Admin {
                     </a>
                 <?php endforeach; ?>
             </nav>
-        </div>
+        </header>
         <?php
     }
 
@@ -223,9 +242,6 @@ class Paymentio_Admin {
         <?php
     }
 
-    /**
-     * AJAX handler to toggle gateway status
-     */
     public function ajax_toggle_gateway() {
         check_ajax_referer( 'paymentio_admin_nonce', 'nonce' );
 
