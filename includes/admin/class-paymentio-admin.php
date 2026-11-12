@@ -238,9 +238,21 @@ class Paymentio_Admin {
      */
     private function render_footer() {
         ?>
-        <div class="paymentio-footer">
-            <p>افزونه پرداخت ووکامرس <strong>پیمنتیو</strong> نسخه <?php echo esc_html( PAYMENTIO_VERSION ); ?> | طراحی شده توسط <a href="https://arianchaghazardi.ir" target="_blank">آرین چقازردی</a> در <a href="https://hectortm.ir" target="_blank">هکتورتیم (HectorTM)</a></p>
-        </div>
+        <footer class="paymentio-footer">
+            <div class="paymentio-footer-inner">
+                <div class="paymentio-footer-left">
+                    <span>پیمنتیو (Paymentio) &mdash; نسخه <?php echo esc_html( PAYMENTIO_VERSION ); ?></span>
+                    <span class="paymentio-sep">|</span>
+                    <span>سامانه جامع و هوشمند مدیریت درگاه های پرداخت و تراکنش های ووکامرس</span>
+                </div>
+                <div class="paymentio-footer-right">
+                    <span>طراحی و توسعه توسط</span>
+                    <a href="https://arianchaghazardi.ir" target="_blank" rel="noopener">آرین چقازردی</a>
+                    <span class="paymentio-sep">&bull;</span>
+                    <a href="https://hectortm.ir" target="_blank" rel="noopener">هکتورتیم</a>
+                </div>
+            </div>
+        </footer>
         <?php
     }
 
