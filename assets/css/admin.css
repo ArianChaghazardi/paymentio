@@ -113,17 +113,30 @@ body[class*="paymentio"] #wpfooter {
     line-height: 1.6;
 }
 
-/* 4. Header & Brand */
+/* 4. Header & Brand (Unified Standard) */
 .paymentio-header {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     border-radius: var(--paymentio-radius);
     padding: 28px 32px 0 32px;
-    box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.3);
-    margin-bottom: 24px;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.5);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
     width: 100%;
     box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.paymentio-header::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .paymentio-header-inner {
@@ -132,179 +145,181 @@ body[class*="paymentio"] #wpfooter {
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
-    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .paymentio-brand {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 16px;
 }
 
+.paymentio-brand-icon,
 .paymentio-logo-badge {
-    width: 54px;
-    height: 54px;
-    background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
-    color: #ffffff;
+    width: 56px;
+    height: 56px;
     border-radius: 14px;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--paymentio-glow);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
     flex-shrink: 0;
 }
 
-.paymentio-title-row {
+.paymentio-brand-icon svg,
+.paymentio-logo-badge svg {
+    width: 28px;
+    height: 28px;
+}
+
+.paymentio-brand-title {
     display: flex;
     align-items: center;
     gap: 12px;
-    flex-wrap: wrap;
 }
 
+.paymentio-brand-title h1,
 .paymentio-title {
-    margin: 0;
-    font-size: 26px;
-    font-weight: 900;
+    font-size: 1.6rem;
+    font-weight: 800;
     color: #ffffff;
+    margin: 0;
     line-height: 1.2;
 }
 
+.paymentio-brand-badge,
 .paymentio-version-tag {
-    background: rgba(255, 255, 255, 0.12);
-    font-size: 11.5px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    color: #f1f5f9;
+    background: rgba(14, 165, 233, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(14, 165, 233, 0.4);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+.paymentio-brand-desc,
+.paymentio-subtitle {
+    color: #94a3b8;
+    margin: 6px 0 0 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.paymentio-header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .paymentio-status-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 4px 12px;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #34d399;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.paymentio-pulse {
-    width: 8px;
-    height: 8px;
-    background-color: #10b981;
-    border-radius: 50%;
-    box-shadow: 0 0 10px #10b981;
-    animation: paymentio-pulse-anim 2s infinite;
-}
-
-@keyframes paymentio-pulse-anim {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
-.paymentio-subtitle {
-    margin: 6px 0 0 0;
-    color: #94a3b8;
-    font-size: 13.5px;
-}
-
-.paymentio-author-badges {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.paymentio-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    background: rgba(14, 165, 233, 0.15);
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    color: #38bdf8;
     padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
-    color: #f1f5f9;
-    text-decoration: none;
-    font-size: 12.5px;
-    transition: all 0.2s ease;
-}
-
-.paymentio-chip:hover {
-    background: rgba(255, 255, 255, 0.16);
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
-.paymentio-chip-brand {
-    border-color: rgba(56, 189, 248, 0.5);
-    background: rgba(56, 189, 248, 0.15);
-}
-
-.paymentio-chip-label {
-    color: #94a3b8;
-}
-
-.paymentio-chip-val {
+    border-radius: 9999px;
+    font-size: 0.82rem;
     font-weight: 700;
 }
 
+.paymentio-pulse-dot,
+.paymentio-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0ea5e9;
+    box-shadow: 0 0 10px #0ea5e9;
+    animation: paymentioPulse 2s infinite;
+}
+
+@keyframes paymentioPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.paymentio-author-badge {
+    color: #64748b;
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.paymentio-author-badge a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.paymentio-author-badge a:hover {
+    color: #38bdf8;
+}
+
+.paymentio-sep {
+    color: #475569;
+}
+
 /* 5. Navigation Tabs */
+.paymentio-tabs,
 .paymentio-nav {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     overflow-x: auto;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+    padding-top: 14px;
     scrollbar-width: none;
-    padding-top: 2px;
+    border-top: none;
+    white-space: nowrap;
     width: 100%;
     box-sizing: border-box;
 }
 
+.paymentio-tabs::-webkit-scrollbar,
 .paymentio-nav::-webkit-scrollbar {
     display: none;
 }
 
+.paymentio-tab-btn,
 .paymentio-nav-item {
-    padding: 14px 20px;
-    color: #94a3b8;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 13.5px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 12px 18px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
     border-bottom: 3px solid transparent;
     transition: all 0.2s ease;
-    flex-shrink: 0;
     white-space: nowrap;
+    border-top: none;
 }
 
+.paymentio-tab-btn:hover,
 .paymentio-nav-item:hover {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.04);
 }
 
+.paymentio-tab-btn.active,
 .paymentio-nav-item.active {
-    color: #38bdf8;
-    border-bottom-color: #38bdf8;
-    font-weight: 800;
+    color: #ffffff;
+    border-bottom-color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.08);
+    border-radius: 8px 8px 0 0;
 }
 
-.paymentio-nav-icon,
-.paymentio-nav-item svg {
-    width: 18px;
-    height: 18px;
-    margin-left: 8px;
+.paymentio-tab-icon {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    stroke: currentColor;
-    flex-shrink: 0;
 }
 
 /* 6. General Cards & Layout Containers */

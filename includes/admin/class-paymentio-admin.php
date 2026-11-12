@@ -189,42 +189,43 @@ class Paymentio_Admin {
         <header class="paymentio-header">
             <div class="paymentio-header-inner">
                 <div class="paymentio-brand">
-                    <div class="paymentio-logo-badge">
+                    <div class="paymentio-brand-icon">
                         <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
                             <line x1="2" y1="10" x2="22" y2="10"></line>
                         </svg>
                     </div>
-                    <div>
-                        <div class="paymentio-title-row">
-                            <h1 class="paymentio-title">پیمنتیو</h1>
-                            <span class="paymentio-version-tag">نسخه <?php echo esc_html( PAYMENTIO_VERSION ); ?></span>
-                            <span class="paymentio-status-pill paymentio-status-online">
-                                <span class="paymentio-pulse"></span>
-                                سیستم آماده به کار
-                            </span>
+                    <div class="paymentio-brand-text">
+                        <div class="paymentio-brand-title">
+                            <h1>پیمنتیو</h1>
+                            <span class="paymentio-brand-badge">Paymentio v<?php echo esc_html( PAYMENTIO_VERSION ); ?></span>
                         </div>
-                        <p class="paymentio-subtitle">مدیریت یکپارچه و هوشمند درگاه های پرداخت ووکامرس</p>
+                        <p class="paymentio-brand-desc">
+                            سیستم پیشرفته مدیریت درگاه های پرداخت، تسویه حساب هوشمند و تراکنش های ووکامرس
+                        </p>
                     </div>
                 </div>
 
-                <div class="paymentio-author-badges">
-                    <a href="https://arianchaghazardi.ir" target="_blank" class="paymentio-chip">
-                        <span class="paymentio-chip-label">توسعه دهنده:</span>
-                        <span class="paymentio-chip-val">آرین چقازردی</span>
-                    </a>
-                    <a href="https://hectortm.ir" target="_blank" class="paymentio-chip paymentio-chip-brand">
-                        <span class="paymentio-chip-label">محصول:</span>
-                        <span class="paymentio-chip-val">هکتورتیم</span>
-                    </a>
+                <div class="paymentio-header-meta">
+                    <div class="paymentio-status-pill">
+                        <span class="paymentio-pulse-dot"></span>
+                        <span>سرویس درگاه های پرداخت فعال و آنلاین</span>
+                    </div>
+                    <div class="paymentio-author-badge">
+                        <span>توسعه توسط</span>
+                        <a href="https://arianchaghazardi.ir" target="_blank" rel="noopener">آرین چقازردی</a>
+                        <span class="paymentio-sep">&bull;</span>
+                        <a href="https://hectortm.ir" target="_blank" rel="noopener">هکتورتیم</a>
+                    </div>
                 </div>
             </div>
 
-            <nav class="paymentio-nav">
+            <!-- Navigation Tabs -->
+            <nav class="paymentio-tabs paymentio-nav">
                 <?php foreach ( $tabs as $id => $tab ) : ?>
-                    <a href="<?php echo esc_url( $tab['url'] ); ?>" class="paymentio-nav-item <?php echo $active_tab === $id ? 'active' : ''; ?>">
-                        <?php echo Paymentio_Helper::icon( $tab['icon'], 18, 'paymentio-nav-icon' ); ?>
-                        <?php echo esc_html( $tab['title'] ); ?>
+                    <a href="<?php echo esc_url( $tab['url'] ); ?>" class="paymentio-tab-btn paymentio-nav-item <?php echo $active_tab === $id ? 'active' : ''; ?>">
+                        <span class="paymentio-tab-icon"><?php echo Paymentio_Helper::icon( $tab['icon'], 18 ); ?></span>
+                        <span class="paymentio-tab-text"><?php echo esc_html( $tab['title'] ); ?></span>
                     </a>
                 <?php endforeach; ?>
             </nav>
