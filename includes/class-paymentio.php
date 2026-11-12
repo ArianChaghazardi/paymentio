@@ -59,6 +59,7 @@ class Paymentio {
         require_once PAYMENTIO_PATH . 'includes/gateways/class-gateway-zibal.php';
         require_once PAYMENTIO_PATH . 'includes/gateways/class-gateway-payping.php';
         require_once PAYMENTIO_PATH . 'includes/gateways/class-gateway-unified.php';
+        require_once PAYMENTIO_PATH . 'includes/gateways/class-gateway-card.php';
 
         // Admin
         if ( is_admin() ) {
@@ -89,6 +90,7 @@ class Paymentio {
         add_action( 'wp_head', array( $this, 'add_referrer_policy_meta' ), 1 );
         add_action( 'template_redirect', array( $this, 'send_referrer_policy_header' ) );
         add_action( 'template_redirect', array( $this, 'maybe_render_gateway_redirect' ), 5 );
+        add_action( 'template_redirect', array( $this, 'maybe_render_card_payment_page' ), 5 );
 
         // Add action links to plugin list
         // add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
@@ -239,6 +241,163 @@ class Paymentio {
     }
 
     /**
+     * Handle dedicated card to card payment page and receipt upload
+     */
+    public function maybe_render_card_payment_page() {
+        if ( ! isset( $_GET['paymentio_action'] ) || 'card_pay' !== $_GET['paymentio_action'] ) {
+            return;
+        }
+
+        $order_id  = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+        $order_key = isset( $_GET['order_key'] ) ? sanitize_text_field( wp_unslash( $_GET['order_key'] ) ) : '';
+
+        if ( ! $order_id || empty( $order_key ) ) {
+            wp_safe_redirect( wc_get_checkout_url() );
+            exit;
+        }
+
+        $order = wc_get_order( $order_id );
+        if ( ! $order || $order->get_order_key() !== $order_key ) {
+            wp_safe_redirect( wc_get_checkout_url() );
+            exit;
+        }
+
+        // Handle receipt submission POST
+        if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['paymentio_submit_receipt'] ) ) {
+            if ( ! isset( $_POST['paymentio_receipt_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['paymentio_receipt_nonce'] ) ), 'paymentio_upload_receipt_' . $order_id ) ) {
+                wp_die( 'خطای امنیتی: نشست شما منقضی شده است. لطفاً صفحه را رفرش فرمایید.', 'خطای امنیتی', array( 'response' => 403 ) );
+            }
+
+            if ( empty( $_FILES['receipt_image']['name'] ) || UPLOAD_ERR_OK !== $_FILES['receipt_image']['error'] ) {
+                wc_add_notice( 'لطفاً فایل تصویر رسید را انتخاب فرمایید.', 'error' );
+            } else {
+                $card_settings = get_option( 'woocommerce_paymentio_card_settings', array() );
+                $max_mb        = absint( $card_settings['max_file_size'] ?? 5 );
+                $max_bytes     = $max_mb * 1024 * 1024;
+
+                if ( $_FILES['receipt_image']['size'] > $max_bytes ) {
+                    wc_add_notice( sprintf( 'حجم فایل بیشتر از حد مجاز (%s مگابایت) است.', Paymentio_Helper::to_persian_digits( $max_mb ) ), 'error' );
+                } else {
+                    $file_tmp  = $_FILES['receipt_image']['tmp_name'];
+                    $file_name = sanitize_file_name( $_FILES['receipt_image']['name'] );
+                    $ext       = strtolower( pathinfo( $file_name, PATHINFO_EXTENSION ) );
+                    $allowed   = array( 'jpg', 'jpeg', 'png', 'webp' );
+
+                    // Check MIME type via finfo
+                    $mime = '';
+                    if ( function_exists( 'finfo_open' ) ) {
+                        $finfo = finfo_open( FILEINFO_MIME_TYPE );
+                        $mime  = finfo_file( $finfo, $file_tmp );
+                        finfo_close( $finfo );
+                    } elseif ( function_exists( 'mime_content_type' ) ) {
+                        $mime = mime_content_type( $file_tmp );
+                    }
+
+                    $allowed_mimes = array( 'image/jpeg', 'image/png', 'image/webp' );
+
+                    if ( ! in_array( $ext, $allowed, true ) || ( ! empty( $mime ) && ! in_array( $mime, $allowed_mimes, true ) ) ) {
+                        wc_add_notice( 'فرمت فایل مجاز نیست. لطفاً تصویر با فرمت JPG، PNG یا WEBP بارگذاری کنید.', 'error' );
+                    } else {
+                        $upload_dir = wp_upload_dir();
+                        $target_dir = $upload_dir['basedir'] . '/paymentio-receipts';
+
+                        if ( ! file_exists( $target_dir ) ) {
+                            wp_mkdir_p( $target_dir );
+                            @file_put_contents( $target_dir . '/index.php', '<?php // Silence is golden' );
+                            @file_put_contents( $target_dir . '/.htaccess', "<FilesMatch \"\\.(php|phtml|php3|php4|php5|php7|php8|phps|cgi|pl|exe)$\">\nOrder Deny,Allow\nDeny from all\n</FilesMatch>\nOptions -Indexes" );
+                        }
+
+                        $safe_filename = 'receipt_' . $order_id . '_' . wp_generate_password( 12, false, false ) . '.' . $ext;
+                        $target_path   = $target_dir . '/' . $safe_filename;
+                        $target_url    = $upload_dir['baseurl'] . '/paymentio-receipts/' . $safe_filename;
+
+                        if ( move_uploaded_file( $file_tmp, $target_path ) ) {
+                            $tracking_code = sanitize_text_field( wp_unslash( $_POST['tracking_code'] ?? '' ) );
+                            $payer_card    = Paymentio_Helper::clean_card_number( sanitize_text_field( wp_unslash( $_POST['payer_card'] ?? '' ) ) );
+                            $customer_note = sanitize_textarea_field( wp_unslash( $_POST['customer_note'] ?? '' ) );
+                            $card_number   = sanitize_text_field( wp_unslash( $_POST['card_number'] ?? '' ) );
+                            $card_holder   = sanitize_text_field( wp_unslash( $_POST['card_holder'] ?? '' ) );
+                            $bank_name     = sanitize_text_field( wp_unslash( $_POST['bank_name'] ?? '' ) );
+
+                            $receipt_id = Paymentio_DB::insert_receipt( array(
+                                'order_id'         => $order_id,
+                                'amount'           => Paymentio_Helper::to_toman( $order->get_total(), $order->get_currency() ),
+                                'currency'         => 'IRT',
+                                'card_number'      => $card_number,
+                                'card_holder'      => $card_holder,
+                                'bank_name'        => $bank_name,
+                                'payer_card'       => $payer_card,
+                                'tracking_code'    => $tracking_code,
+                                'receipt_url'      => $target_url,
+                                'receipt_path'     => $target_path,
+                                'receipt_filename' => $safe_filename,
+                                'receipt_filesize' => (int) $_FILES['receipt_image']['size'],
+                                'customer_name'    => trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
+                                'customer_mobile'  => $order->get_billing_phone(),
+                                'customer_email'   => $order->get_billing_email(),
+                                'customer_note'    => $customer_note,
+                                'status'           => 'pending',
+                            ) );
+
+                            // Update order meta
+                            $order->update_meta_data( '_paymentio_receipt_id', $receipt_id );
+                            $order->update_meta_data( '_paymentio_receipt_url', $target_url );
+                            $order->update_meta_data( '_paymentio_tracking_code', $tracking_code );
+                            $order->update_meta_data( '_paymentio_payer_card', $payer_card );
+                            $order->update_meta_data( '_paymentio_receipt_status', 'pending' );
+                            $order->save();
+
+                            // Order note
+                            $note = sprintf(
+                                'رسید پرداخت کارت به کارت توسط مشتری بارگذاری شد. کد پیگیری: %s | کارت مبدا: %s',
+                                $tracking_code ?: 'ثبت نشده',
+                                $payer_card ?: 'ثبت نشده'
+                            );
+                            $order->add_order_note( $note );
+
+                            // Update transaction record
+                            $tx = Paymentio_DB::get_by_order_id( $order_id );
+                            if ( $tx ) {
+                                Paymentio_DB::update( $tx->id, array(
+                                    'reference_id' => $tracking_code,
+                                    'card_number'  => $payer_card ?: $card_number,
+                                    'message'      => 'رسید پرداخت توسط مشتری ثبت شد و در انتظار تایید است.',
+                                ) );
+                            }
+
+                            // Redirect to refresh page and show status
+                            wp_safe_redirect( add_query_arg(
+                                array(
+                                    'paymentio_action' => 'card_pay',
+                                    'order_id'         => $order_id,
+                                    'order_key'        => $order_key,
+                                    'submitted'        => '1',
+                                ),
+                                home_url( '/' )
+                            ) );
+                            exit;
+                        } else {
+                            wc_add_notice( 'خطا در بارگذاری فایل. لطفاً مجدداً تلاش فرمایید.', 'error' );
+                        }
+                    }
+                }
+            }
+        }
+
+        // Clean output buffers
+        while ( ob_get_level() > 0 ) {
+            ob_end_clean();
+        }
+
+        if ( ! headers_sent() ) {
+            header( 'Content-Type: text/html; charset=UTF-8' );
+        }
+
+        require_once PAYMENTIO_PATH . 'includes/templates/card-payment-page.php';
+        exit;
+    }
+
+    /**
      * Add Referrer-Policy meta tag on checkout and payment pages
      */
     public function add_referrer_policy_meta() {
@@ -272,6 +431,7 @@ class Paymentio {
         $methods[] = 'Paymentio_Gateway_Zibal';
         $methods[] = 'Paymentio_Gateway_Payping';
         $methods[] = 'Paymentio_Gateway_Unified';
+        $methods[] = 'Paymentio_Gateway_Card';
 
         return $methods;
     }

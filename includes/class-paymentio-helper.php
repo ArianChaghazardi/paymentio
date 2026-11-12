@@ -93,6 +93,36 @@ class Paymentio_Helper {
             case 'layers':
                 return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>';
 
+            case 'card':
+            case 'credit-card':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><rect x="1" y="4" width="22" height="16" rx="3" ry="3"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>';
+
+            case 'receipt':
+            case 'invoice':
+            case 'file-text':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
+
+            case 'copy':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+
+            case 'upload':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>';
+
+            case 'bank':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><line x1="3" y1="21" x2="21" y2="21"></line><line x1="3" y1="10" x2="21" y2="10"></line><polyline points="5 6 12 3 19 6"></polyline><line x1="4" y1="10" x2="4" y2="21"></line><line x1="20" y1="10" x2="20" y2="21"></line><line x1="8" y1="14" x2="8" y2="17"></line><line x1="12" y1="14" x2="12" y2="17"></line><line x1="16" y1="14" x2="16" y2="17"></line></svg>';
+
+            case 'eye':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+
+            case 'external':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>';
+
+            case 'clock':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+
+            case 'camera':
+                return '<svg viewBox="0 0 24 24" width="' . $s . '" height="' . $s . '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $c . '"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>';
+
             default:
                 return '';
         }
@@ -360,5 +390,126 @@ class Paymentio_Helper {
             'latency' => $duration,
             'message' => 'اتصال با موفقیت برقرار شد.',
         );
+    }
+
+    /**
+     * Get Iranian Banks list
+     *
+     * @return array
+     */
+    public static function get_iranian_banks() {
+        return array(
+            'melli'          => array( 'name' => 'بانک ملی ایران', 'bins' => array( '603799' ) ),
+            'mellat'         => array( 'name' => 'بانک ملت', 'bins' => array( '610433', '991975' ) ),
+            'saderat'        => array( 'name' => 'بانک صادرات ایران', 'bins' => array( '603769' ) ),
+            'tejarat'        => array( 'name' => 'بانک تجارت', 'bins' => array( '585983', '627353' ) ),
+            'sepah'          => array( 'name' => 'بانک سپه', 'bins' => array( '589210' ) ),
+            'keshavarzi'     => array( 'name' => 'بانک کشاورزی', 'bins' => array( '603770', '639217' ) ),
+            'maskan'         => array( 'name' => 'بانک مسکن', 'bins' => array( '628023' ) ),
+            'saman'          => array( 'name' => 'بانک سامان', 'bins' => array( '621986' ) ),
+            'pasargad'       => array( 'name' => 'بانک پاسارگاد', 'bins' => array( '502229', '639347' ) ),
+            'parsian'        => array( 'name' => 'بانک پارسیان', 'bins' => array( '622106', '639194', '627884' ) ),
+            'ayandeh'        => array( 'name' => 'بانک آینده', 'bins' => array( '636214' ) ),
+            'shahr'          => array( 'name' => 'بانک شهر', 'bins' => array( '504706', '502806' ) ),
+            'sina'           => array( 'name' => 'بانک سینا', 'bins' => array( '639346' ) ),
+            'refah'          => array( 'name' => 'بانک رفاه کارگران', 'bins' => array( '589463' ) ),
+            'mehr_iran'      => array( 'name' => 'بانک قرض الحسنه مهر ایران', 'bins' => array( '606373' ) ),
+            'resalat'        => array( 'name' => 'بانک قرض الحسنه رسالت', 'bins' => array( '504172' ) ),
+            'blubank'        => array( 'name' => 'بلوبانک (سامان)', 'bins' => array( '621986' ) ),
+            'gardeshgari'    => array( 'name' => 'بانک گردشگری', 'bins' => array( '505416' ) ),
+            'eghtesad_novin' => array( 'name' => 'بانک اقتصاد نوین', 'bins' => array( '627412' ) ),
+            'karafarin'      => array( 'name' => 'بانک کارآفرین', 'bins' => array( '627488', '502910' ) ),
+            'middle_east'    => array( 'name' => 'بانک خاورمیانه', 'bins' => array( '585947' ) ),
+            'postbank'       => array( 'name' => 'پست بانک ایران', 'bins' => array( '627760' ) ),
+            'day'            => array( 'name' => 'بانک دی', 'bins' => array( '502938' ) ),
+            'iran_zamin'     => array( 'name' => 'بانک ایران زمین', 'bins' => array( '505785' ) ),
+            'sarmayeh'       => array( 'name' => 'بانک سرمایه', 'bins' => array( '639607' ) ),
+            'tosee_taavon'   => array( 'name' => 'بانک توسعه تعاون', 'bins' => array( '502908' ) ),
+            'sanat_madan'    => array( 'name' => 'بانک صنعت و معدن', 'bins' => array( '627961' ) ),
+            'other'          => array( 'name' => 'سایر بانک ها', 'bins' => array() ),
+        );
+    }
+
+    /**
+     * Clean card number (convert to English digits, remove non-digits)
+     *
+     * @param string $card_number
+     * @return string
+     */
+    public static function clean_card_number( $card_number ) {
+        $english = self::to_english_digits( $card_number );
+        return preg_replace( '/\D/', '', $english );
+    }
+
+    /**
+     * Format 16-digit card number in groups of 4 with Persian digits
+     *
+     * @param string $card_number
+     * @param string $separator
+     * @return string
+     */
+    public static function format_card_number( $card_number, $separator = ' - ' ) {
+        $clean = self::clean_card_number( $card_number );
+        if ( strlen( $clean ) !== 16 ) {
+            return self::to_persian_digits( $card_number );
+        }
+        $parts = str_split( $clean, 4 );
+        $formatted = implode( $separator, $parts );
+        return self::to_persian_digits( $formatted );
+    }
+
+    /**
+     * Mask middle digits of a 16-digit card number
+     *
+     * @param string $card_number
+     * @return string
+     */
+    public static function mask_card_number( $card_number ) {
+        $clean = self::clean_card_number( $card_number );
+        if ( strlen( $clean ) < 16 ) {
+            return self::to_persian_digits( $card_number );
+        }
+        $first = substr( $clean, 0, 4 );
+        $last  = substr( $clean, 12, 4 );
+        return self::to_persian_digits( $first ) . ' - **** - **** - ' . self::to_persian_digits( $last );
+    }
+
+    /**
+     * Detect bank from card number BIN
+     *
+     * @param string $card_number
+     * @return array Array with slug and name
+     */
+    public static function detect_bank( $card_number ) {
+        $clean = self::clean_card_number( $card_number );
+        $bin   = substr( $clean, 0, 6 );
+        $banks = self::get_iranian_banks();
+
+        foreach ( $banks as $slug => $bank ) {
+            if ( in_array( $bin, $bank['bins'], true ) ) {
+                return array(
+                    'slug' => $slug,
+                    'name' => $bank['name'],
+                );
+            }
+        }
+
+        return array(
+            'slug' => 'other',
+            'name' => 'بانک عضو شتاب',
+        );
+    }
+
+    /**
+     * Default card to card guidelines and rules text (100% zero ZWNJ)
+     *
+     * @return string
+     */
+    public static function get_default_card_rules() {
+        return "۱. لطفاً مبلغ دقیق صورتحساب را به شماره کارت اعلام شده واریز نمایید.
+۲. پس از انجام انتقال، تصویر واضح یا اسکرین شات از رسید تراکنش تهیه کنید.
+۳. اطلاعات رسید شامل شماره پیگیری، تاریخ، ساعت و چهار رقم آخر کارت مبدا باید کاملاً خوانا باشد.
+۴. تصویر رسید را در فرم زیر بارگذاری کرده و دکمه تایید پرداخت را کلیک کنید.
+۵. سفارش شما پس از بررسی و تایید توسط پشتیبانی، در سریع ترین زمان ممکن فعال و تکمیل خواهد شد.";
     }
 }

@@ -54,6 +54,7 @@ $total_pages  = ceil( $total_items / $per_page );
 
                 <select name="gateway" class="paymentio-input">
                     <option value="">همه درگاه ها</option>
+                    <option value="card" <?php selected( $gateway, 'card' ); ?>>کارت به کارت</option>
                     <option value="zarinpal" <?php selected( $gateway, 'zarinpal' ); ?>>زرین پال</option>
                     <option value="zibal" <?php selected( $gateway, 'zibal' ); ?>>زیبال</option>
                     <option value="payping" <?php selected( $gateway, 'payping' ); ?>>پی پینگ</option>

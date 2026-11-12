@@ -11,14 +11,37 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$stats           = Paymentio_DB::get_stats();
-$active_gateways = Paymentio::instance()->get_active_sub_gateways();
-$gateways_count  = count( $active_gateways );
-$recent_tx       = Paymentio_DB::get_transactions( array( 'limit' => 5 ) );
-$mode            = get_option( 'paymentio_display_mode', 'separate' );
+$stats            = Paymentio_DB::get_stats();
+$active_gateways  = Paymentio::instance()->get_active_sub_gateways();
+$card_settings    = get_option( 'woocommerce_paymentio_card_settings', array() );
+$card_enabled     = isset( $card_settings['enabled'] ) && 'yes' === $card_settings['enabled'];
+$gateways_count   = count( $active_gateways ) + ( $card_enabled ? 1 : 0 );
+$recent_tx        = Paymentio_DB::get_transactions( array( 'limit' => 5 ) );
+$mode             = get_option( 'paymentio_display_mode', 'separate' );
+$pending_receipts = Paymentio_DB::get_pending_receipts_count();
 ?>
 
 <div class="paymentio-dashboard">
+    <?php if ( $pending_receipts > 0 ) : ?>
+        <div class="paymentio-alert paymentio-alert-warning" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; padding: 16px 20px; background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="display: inline-flex; width: 36px; height: 36px; background: #fef3c7; color: #b45309; border-radius: 50%; align-items: center; justify-content: center;">
+                    <?php echo Paymentio_Helper::icon( 'clock', 20 ); ?>
+                </span>
+                <div>
+                    <strong style="color: #92400e; font-size: 14px;">رسید های در انتظار بررسی</strong>
+                    <p style="margin: 2px 0 0 0; color: #78350f; font-size: 13px;">
+                        تعداد <strong><?php echo esc_html( Paymentio_Helper::to_persian_digits( $pending_receipts ) ); ?></strong> فیش پرداخت کارت به کارت توسط خریداران ارسال شده و منتظر تایید شما است.
+                    </p>
+                </div>
+            </div>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=paymentio-receipts&status=pending' ) ); ?>" class="paymentio-btn paymentio-btn-sm paymentio-btn-primary" style="background: #d97706; border-color: #b45309;">
+                <?php echo Paymentio_Helper::icon( 'receipt', 14 ); ?>
+                بررسی و تایید رسید ها
+            </a>
+        </div>
+    <?php endif; ?>
+
     <!-- Stat Cards -->
     <div class="paymentio-stats-grid">
         <div class="paymentio-stat-card">
@@ -57,7 +80,7 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
         <div class="paymentio-stat-card">
             <div class="paymentio-stat-data">
                 <div class="paymentio-stat-label">درگاه های فعال</div>
-                <div class="paymentio-stat-value"><?php echo esc_html( Paymentio_Helper::to_persian_digits( $gateways_count ) ); ?> <span style="font-size:14px; font-weight:normal; color:#94a3b8;">/ ۳</span></div>
+                <div class="paymentio-stat-value"><?php echo esc_html( Paymentio_Helper::to_persian_digits( $gateways_count ) ); ?> <span style="font-size:14px; font-weight:normal; color:#94a3b8;">/ ۴</span></div>
                 <div class="paymentio-stat-hint"><?php echo ( 'unified' === $mode ) ? 'حالت تک درگاه هوشمند' : 'حالت درگاه های مجزا'; ?></div>
             </div>
             <div class="paymentio-stat-icon info">
@@ -81,6 +104,7 @@ $mode            = get_option( 'paymentio_display_mode', 'separate' );
                 <div class="paymentio-mini-gateways">
                     <?php
                     $all_gateways = array(
+                        'paymentio_card'     => array( 'title' => 'کارت به کارت', 'slug' => 'card', 'logo' => 'card.svg' ),
                         'paymentio_zarinpal' => array( 'title' => 'زرین پال', 'slug' => 'zarinpal', 'logo' => 'zarinpal.png' ),
                         'paymentio_zibal'    => array( 'title' => 'زیبال', 'slug' => 'zibal', 'logo' => 'zibal.png' ),
                         'paymentio_payping'  => array( 'title' => 'پی پینگ', 'slug' => 'payping', 'logo' => 'payping.png' ),
