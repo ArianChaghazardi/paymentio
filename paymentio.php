@@ -3,7 +3,7 @@
  * Plugin Name: پیمنتیو | سامانه جامع مدیریت درگاه های پرداخت ووکامرس
  * Plugin URI: https://hectortm.ir/paymentio
  * Description: افزونه جامع و مدرن درگاه های پرداخت ووکامرس، پرداخت کارت به کارت و مدیریت فیش های واریزی، هدایت خودکار بانکی و گزارش هوشمند تراکنش ها.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: آرین چقازردی
  * Author URI: https://arianchaghazardi.ir
  * Developer: هکتورتیم
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Plugin Constants
-define( 'PAYMENTIO_VERSION', '1.2.1' );
+define( 'PAYMENTIO_VERSION', '1.2.2' );
 define( 'PAYMENTIO_FILE', __FILE__ );
 define( 'PAYMENTIO_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PAYMENTIO_URL', plugin_dir_url( __FILE__ ) );

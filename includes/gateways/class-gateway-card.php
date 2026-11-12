@@ -62,7 +62,7 @@ class Paymentio_Gateway_Card extends WC_Payment_Gateway {
         $this->rules_notes    = $this->get_option( 'rules_notes', Paymentio_Helper::get_default_card_rules() );
 
         // Icon
-        $this->icon = PAYMENTIO_URL . 'assets/images/card.png';
+        $this->icon = PAYMENTIO_URL . 'assets/images/card-badge.svg';
 
         // Save admin options
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -237,6 +237,61 @@ class Paymentio_Gateway_Card extends WC_Payment_Gateway {
      * @param int $order_id
      * @return array
      */
+
+    /**
+     * Return gateway icon HTML with strict inline sizing to prevent theme distortion
+     *
+     * @return string
+     */
+    public function get_icon() {
+        $icon_url = PAYMENTIO_URL . 'assets/images/card-badge.svg';
+        $icon = '<img src="' . esc_url( $icon_url ) . '" alt="' . esc_attr( $this->get_title() ) . '" class="paymentio-card-method-icon" style="height:26px !important;max-height:28px !important;width:auto !important;max-width:48px !important;display:inline-block !important;vertical-align:middle !important;margin:0 8px 0 0 !important;border-radius:4px !important;box-shadow:0 1px 3px rgba(15,23,42,0.15) !important;" />';
+        return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
+    }
+
+    /**
+     * Render checkout payment fields
+     */
+    public function payment_fields() {
+        if ( ! empty( $this->description ) ) {
+            echo '<p class="paymentio-card-desc">' . esc_html( $this->description ) . '</p>';
+        }
+
+        $cards = $this->get_configured_cards();
+        if ( ! empty( $cards ) ) {
+            $first_card = $cards[0];
+            $bank_name  = $first_card['bank_name'] ?: 'بانک عضو شتاب';
+            $masked_num = Paymentio_Helper::mask_card_number( $first_card['card_number'] );
+            $holder     = $first_card['card_holder'] ?: '';
+            ?>
+            <div class="paymentio-card-checkout-box">
+                <div class="paymentio-card-checkout-header">
+                    <div class="paymentio-card-checkout-bank">
+                        <?php echo Paymentio_Helper::icon( 'card', 16 ); ?>
+                        <span><?php echo esc_html( $bank_name ); ?></span>
+                    </div>
+                    <?php if ( ! empty( $holder ) ) : ?>
+                        <div class="paymentio-card-checkout-holder">
+                            <span>صاحب حساب:</span>
+                            <strong><?php echo esc_html( $holder ); ?></strong>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="paymentio-card-checkout-row">
+                    <span class="paymentio-card-checkout-label">شماره کارت مقصد:</span>
+                    <strong class="paymentio-card-checkout-num" dir="ltr"><?php echo esc_html( $masked_num ); ?></strong>
+                </div>
+
+                <div class="paymentio-card-checkout-notice">
+                    <?php echo Paymentio_Helper::icon( 'info', 15 ); ?>
+                    <span>پس از ثبت سفارش، به صفحه اختصاصی پرداخت منتقل شده و شماره کامل کارت و امکان ثبت تصویر فیش در اختیارتان قرار می گیرد.</span>
+                </div>
+            </div>
+            <?php
+        }
+    }
+
     public function process_payment( $order_id ) {
         $order = wc_get_order( $order_id );
 

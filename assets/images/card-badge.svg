@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 32" width="48" height="32">
+  <defs>
+    <linearGradient id="cbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="60%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="30" rx="5" fill="url(#cbg)" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1"/>
+  <!-- Decorative line -->
+  <line x1="2" y1="8" x2="46" y2="8" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <!-- Golden Chip -->
+  <rect x="5" y="13" width="9" height="7" rx="1.5" fill="url(#chip)" stroke="#a16207" stroke-width="0.5"/>
+  <!-- Contactless waves -->
+  <path d="M16 14.5a3 3 0 0 1 0 4" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" fill="none"/>
+  <path d="M18 13a5.5 5.5 0 0 1 0 7" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" fill="none"/>
+  <!-- Card Dots -->
+  <circle cx="28" cy="22" r="1" fill="#ffffff" opacity="0.9"/>
+  <circle cx="32" cy="22" r="1" fill="#ffffff" opacity="0.9"/>
+  <circle cx="36" cy="22" r="1" fill="#ffffff" opacity="0.9"/>
+  <circle cx="40" cy="22" r="1" fill="#ffffff" opacity="0.9"/>
+  <!-- Bank pill -->
+  <rect x="33" y="4" width="10" height="4" rx="1.5" fill="#0284c7" opacity="0.9"/>
+</svg>

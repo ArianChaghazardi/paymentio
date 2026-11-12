@@ -440,7 +440,7 @@ class Paymentio {
      * Enqueue frontend scripts on checkout
      */
     public function enqueue_frontend_scripts() {
-        if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+        if ( ! function_exists( 'is_checkout' ) || ( ! is_checkout() && ! is_checkout_pay_page() ) ) {
             return;
         }
 
