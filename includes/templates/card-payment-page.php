@@ -99,12 +99,15 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
             min-height: 100vh;
         }
 
+        body, button, input, select, textarea {
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+
         body {
             background: radial-gradient(circle at 100% 0%, #f1f5f9 0%, #f8fafc 50%, #e2e8f0 100%);
             color: var(--p-text-main);
             direction: rtl;
             text-align: right;
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.5;
             display: flex;
             flex-direction: column;
@@ -254,6 +257,7 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
 
         /* Copy Button */
         .paymentio-copy-btn {
+            font-family: 'Vazirmatn', sans-serif !important;
             background: #ffffff;
             border: 1.5px solid #cbd5e1;
             color: #1e293b;
@@ -268,6 +272,9 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
             transition: all 0.2s ease;
             white-space: nowrap;
             user-select: none;
+        }
+        .paymentio-copy-btn span {
+            font-family: 'Vazirmatn', sans-serif !important;
         }
         .paymentio-copy-btn:hover {
             border-color: var(--p-primary);
@@ -396,10 +403,10 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
         }
 
         .paymentio-card-digits {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 1.45rem;
-            font-weight: 800;
-            letter-spacing: 3px;
+            font-family: 'Vazirmatn', sans-serif !important;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
             color: #ffffff;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
             user-select: all;
@@ -428,6 +435,7 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
         }
 
         .paymentio-card-copy-btn {
+            font-family: 'Vazirmatn', sans-serif !important;
             background: rgba(255, 255, 255, 0.16);
             border: 1px solid rgba(255, 255, 255, 0.28);
             color: #ffffff;
@@ -440,6 +448,9 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
             align-items: center;
             gap: 5px;
             transition: all 0.2s;
+        }
+        .paymentio-card-copy-btn span {
+            font-family: 'Vazirmatn', sans-serif !important;
         }
         .paymentio-card-copy-btn:hover {
             background: rgba(255, 255, 255, 0.3);
@@ -461,7 +472,10 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
             align-items: center;
             justify-content: space-between;
             direction: ltr;
-            font-family: monospace;
+            font-family: 'Vazirmatn', sans-serif !important;
+        }
+        .paymentio-shaba-box span {
+            font-family: 'Vazirmatn', sans-serif !important;
         }
 
         /* Rules Box */
@@ -774,6 +788,7 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
 
         /* Submit Button */
         .paymentio-submit-btn {
+            font-family: 'Vazirmatn', sans-serif !important;
             width: 100%;
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #ffffff;
@@ -790,6 +805,9 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
             justify-content: center;
             gap: 8px;
             box-sizing: border-box;
+        }
+        .paymentio-submit-btn span {
+            font-family: 'Vazirmatn', sans-serif !important;
         }
         .paymentio-submit-btn:hover {
             background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
