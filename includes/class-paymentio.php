@@ -91,7 +91,7 @@ class Paymentio {
         add_action( 'template_redirect', array( $this, 'maybe_render_gateway_redirect' ), 5 );
 
         // Add action links to plugin list
-        add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
+        // add_filter( 'plugin_action_links_' . plugin_basename( PAYMENTIO_FILE ), array( $this, 'plugin_action_links' ) );
     }
 
     /**

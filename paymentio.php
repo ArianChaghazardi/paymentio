@@ -1,11 +1,13 @@
 <?php
 /**
- * Plugin Name: پیمنتیو | Paymentio
- * Plugin URI: https://hectortm.ir
- * Description: افزونه جامع، ماژولار و مدرن درگاه های پرداخت ووکامرس با پشتیبانی از زرین پال، زیبال، پی پینگ و سیستم هدایت هوشمند بانکی.
+ * Plugin Name: پیمنتیو | سامانه جامع مدیریت درگاه های پرداخت ووکامرس
+ * Plugin URI: https://hectortm.ir/paymentio
+ * Description: افزونه جامع و مدرن درگاه های پرداخت ووکامرس، مدیریت هوشمند تراکنش ها و هدایت خودکار بانکی با پنل مدیریت پیشرفته.
  * Version: 1.0.2
- * Author: آرین چقازردی در هکتورتیم (HectorTM)
- * Author URI: https://hectortm.ir
+ * Author: آرین چقازردی
+ * Author URI: https://arianchaghazardi.ir
+ * Developer: هکتورتیم
+ * Developer URI: https://hectortm.ir
  * Text Domain: paymentio
  * Domain Path: /languages
  * Requires at least: 5.6
@@ -14,7 +16,8 @@
  * WC tested up to: 11.2
  *
  * @package Paymentio
- * @author Arian Chaghazardi
+ * @author آرین چقازردی
+ * @developer هکتورتیم
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
