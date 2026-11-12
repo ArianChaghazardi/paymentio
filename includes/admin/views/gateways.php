@@ -282,7 +282,7 @@ $iranian_banks = Paymentio_Helper::get_iranian_banks();
                             <div class="paymentio-modal-footer">
                                 <button type="submit" class="paymentio-btn paymentio-btn-primary">
                                     <?php echo Paymentio_Helper::icon( 'check', 16 ); ?>
-                                    ذخیره تنظیمات کارت به کارت
+                                    ذخیره تغییرات
                                 </button>
                                 <button type="button" class="paymentio-btn paymentio-btn-outline paymentio-modal-close">بستن</button>
                             </div>

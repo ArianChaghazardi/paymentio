@@ -36,6 +36,36 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
     <title>پرداخت کارت به کارت | سفارش شماره <?php echo esc_html( Paymentio_Helper::to_persian_digits( $order->get_order_number() ) ); ?> - <?php echo esc_html( $site_title ); ?></title>
     <link rel="stylesheet" href="<?php echo esc_url( PAYMENTIO_URL . 'assets/css/checkout.css?v=' . PAYMENTIO_VERSION ); ?>">
     <style>
+        /* 1. Local Vazirmatn Font Face */
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('<?php echo esc_url( PAYMENTIO_URL . 'assets/fonts/Vazirmatn-Regular.woff2' ); ?>') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('<?php echo esc_url( PAYMENTIO_URL . 'assets/fonts/Vazirmatn-Medium.woff2' ); ?>') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('<?php echo esc_url( PAYMENTIO_URL . 'assets/fonts/Vazirmatn-Bold.woff2' ); ?>') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('<?php echo esc_url( PAYMENTIO_URL . 'assets/fonts/Vazirmatn-Black.woff2' ); ?>') format('woff2');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --p-bg: #f8fafc;
             --p-card-bg: #ffffff;
@@ -56,8 +86,11 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
             padding: 0;
         }
 
+        body, button, input, select, textarea {
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
             color: var(--p-text-main);
             direction: rtl;
@@ -741,10 +774,15 @@ $can_upload = ( ! $receipt || 'rejected' === $receipt->status );
                             </div>
                         </div>
 
-                        <?php if ( ! empty( $card['shaba'] ) ) : ?>
+                        <?php
+                        $shaba_val    = isset( $card['shaba'] ) ? trim( (string) $card['shaba'] ) : '';
+                        $shaba_digits = preg_replace( '/[^0-9]/', '', $shaba_val );
+                        $has_shaba    = ! empty( $shaba_val ) && ! empty( $shaba_digits ) && ! preg_match( '/^0+$/', $shaba_digits ) && 'IR...' !== $shaba_val;
+                        ?>
+                        <?php if ( $has_shaba ) : ?>
                             <div class="paymentio-shaba-box">
-                                <span><?php echo esc_html( $card['shaba'] ); ?></span>
-                                <button type="button" class="paymentio-copy-btn" style="padding: 4px 8px; font-size: 0.75rem;" data-copy="<?php echo esc_attr( $card['shaba'] ); ?>">
+                                <span><?php echo esc_html( $shaba_val ); ?></span>
+                                <button type="button" class="paymentio-copy-btn" style="padding: 4px 8px; font-size: 0.75rem;" data-copy="<?php echo esc_attr( $shaba_val ); ?>">
                                     کپی شبا
                                 </button>
                             </div>

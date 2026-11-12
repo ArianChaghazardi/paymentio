@@ -482,12 +482,16 @@ class Paymentio_Admin {
                         $bank_slug = $detected['slug'];
                     }
 
+                    $raw_shaba    = sanitize_text_field( $card['shaba'] ?? '' );
+                    $shaba_digits = preg_replace( '/[^0-9]/', '', $raw_shaba );
+                    $clean_shaba  = ( empty( $shaba_digits ) || preg_match( '/^0+$/', $shaba_digits ) || 'IR...' === trim( $raw_shaba ) ) ? '' : $raw_shaba;
+
                     $sanitized_cards[] = array(
                         'bank_slug'   => $bank_slug,
                         'bank_name'   => $bank_name,
                         'card_number' => $num,
                         'card_holder' => sanitize_text_field( $card['card_holder'] ?? '' ),
-                        'shaba'       => sanitize_text_field( $card['shaba'] ?? '' ),
+                        'shaba'       => $clean_shaba,
                     );
                 }
             }

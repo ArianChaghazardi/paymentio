@@ -270,7 +270,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: postData,
             success: function (res) {
-                $btn.prop('disabled', false).text('ذخیره تنظیمات کارت به کارت');
+                $btn.prop('disabled', false).text('ذخیره تغییرات');
                 if (res.success) {
                     $form.closest('.paymentio-modal').fadeOut(200);
                     window.location.reload();
@@ -279,7 +279,7 @@ jQuery(document).ready(function ($) {
                 }
             },
             error: function () {
-                $btn.prop('disabled', false).text('ذخیره تنظیمات کارت به کارت');
+                $btn.prop('disabled', false).text('ذخیره تغییرات');
                 alert('خطا در برقراری ارتباط با سرور');
             }
         });

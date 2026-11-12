@@ -182,12 +182,16 @@ class Paymentio_Gateway_Card extends WC_Payment_Gateway {
             foreach ( $cards as $card ) {
                 $clean_num = Paymentio_Helper::clean_card_number( $card['card_number'] ?? '' );
                 if ( ! empty( $clean_num ) ) {
+                    $raw_shaba    = sanitize_text_field( $card['shaba'] ?? '' );
+                    $shaba_digits = preg_replace( '/[^0-9]/', '', $raw_shaba );
+                    $clean_shaba  = ( empty( $shaba_digits ) || preg_match( '/^0+$/', $shaba_digits ) || 'IR...' === trim( $raw_shaba ) ) ? '' : $raw_shaba;
+
                     $valid_cards[] = array(
                         'bank_slug'   => sanitize_text_field( $card['bank_slug'] ?? 'other' ),
                         'bank_name'   => sanitize_text_field( $card['bank_name'] ?? 'بانک عضو شتاب' ),
                         'card_number' => $clean_num,
                         'card_holder' => sanitize_text_field( $card['card_holder'] ?? '' ),
-                        'shaba'       => sanitize_text_field( $card['shaba'] ?? '' ),
+                        'shaba'       => $clean_shaba,
                     );
                 }
             }
@@ -209,13 +213,17 @@ class Paymentio_Gateway_Card extends WC_Payment_Gateway {
                 $bank_slug = $detected['slug'];
             }
 
+            $raw_shaba    = sanitize_text_field( $this->get_option( 'shaba', '' ) );
+            $shaba_digits = preg_replace( '/[^0-9]/', '', $raw_shaba );
+            $clean_shaba  = ( empty( $shaba_digits ) || preg_match( '/^0+$/', $shaba_digits ) || 'IR...' === trim( $raw_shaba ) ) ? '' : $raw_shaba;
+
             return array(
                 array(
                     'bank_slug'   => $bank_slug,
                     'bank_name'   => $bank_name,
                     'card_number' => $single_num,
                     'card_holder' => $this->get_option( 'card_holder', '' ),
-                    'shaba'       => $this->get_option( 'shaba', '' ),
+                    'shaba'       => $clean_shaba,
                 ),
             );
         }
